@@ -1,7 +1,15 @@
 {
   "name": "vectorio",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
+  "description": "Turn SVGs into production-ready React, Vue, Svelte, or Solid components — with auto-detected props, optional TypeScript and Tailwind, and batch library generation. Runs entirely in the browser.",
+  "author": "Berkin Düz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/berkinduz/vectorio"
+  },
+  "homepage": "https://vectorio-ten.vercel.app",
   "type": "module",
   "scripts": {
     "dev": "vite",

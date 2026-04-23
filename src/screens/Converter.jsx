@@ -4,7 +4,7 @@ import { useConverter, FrameworkTabs, CodeBlock, CopyButton, Icon } from "../com
 
 export function Converter() {
   const conv = useConverter();
-  const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, parsed, code, changedLines } = conv;
+  const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, a11y, setA11y, forwardRef, setForwardRef, parsed, code, changedLines } = conv;
 
   const [drag, setDrag] = useState(false);
 
@@ -39,15 +39,24 @@ export function Converter() {
             <div className="preview-canvas">
               {parsed.ok ? <div dangerouslySetInnerHTML={previewInner} /> : <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-faint)" }}>invalid</span>}
             </div>
-            <div className="preview-meta">
-              <div className="name" style={{ fontSize: 16 }}>Preview · 128px</div>
-              <div className="row"><span className="k">viewBox</span><span className="v">{parsed.ok ? parsed.viewBox : "—"}</span></div>
+            <div className="preview-meta grid">
+              <div className="meta-head">
+                <span className="name">Preview</span>
+                <span className="status" style={{ color: parsed.ok ? "var(--accent)" : "var(--fg-faint)" }}>
+                  {parsed.ok ? "✓ parsed" : "waiting"}
+                </span>
+              </div>
               <div className="row"><span className="k">dims</span><span className="v">{parsed.ok ? `${parsed.width}×${parsed.height}` : "—"}</span></div>
-              <div className="row"><span className="k">stroke-w</span><span className="v">{parsed.ok ? parsed.strokeWidth : "—"}</span></div>
-              <div className="row"><span className="k">fill</span><span className="v">{parsed.ok ? parsed.fill : "—"}</span></div>
-              <div className="row"><span className="k">status</span><span className="v" style={{ color: parsed.ok ? "var(--accent)" : "var(--fg-faint)" }}>{parsed.ok ? "✓ parsed" : "waiting"}</span></div>
+              <div className="row"><span className="k">viewBox</span><span className="v">{parsed.ok ? parsed.viewBox : "—"}</span></div>
+              <div className="row"><span className="k">type</span><span className="v">{parsed.ok ? parsed.iconType : "—"}</span></div>
+              <div className="row"><span className="k">colors</span><span className="v">{parsed.ok ? (parsed.colors.length || "currentColor") : "—"}</span></div>
             </div>
           </div>
+          {parsed.ok && parsed.multicolor && (
+            <div className="notice notice-warn">
+              <strong>Multi-color icon</strong> — detected {parsed.colors.length} distinct colors. Turning on <code>color</code> would flatten them all to one value. Keep it off to preserve the palette.
+            </div>
+          )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <div className="section-title">Auto-detected props</div>
@@ -62,6 +71,31 @@ export function Converter() {
                   <span>{k}</span>
                   <span style={{ color: "var(--fg-faint)", fontSize: 10 }}>
                     {k === "color" ? "fill/stroke" : k === "size" ? "w/h" : "stroke-width"}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="section-title">
+              <span>{source === Vek.DEFAULT_SVG ? "Try a sample" : "Samples"}</span>
+              <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-faint)" }}>
+                {source === Vek.DEFAULT_SVG ? "see how each case is handled" : "swap in another"}
+              </span>
+            </div>
+            <div className="sample-gallery">
+              {Vek.CONVERTER_SAMPLES.map((s) => (
+                <button
+                  key={s.id}
+                  className="sample-chip"
+                  onClick={() => { setSource(s.svg); setName(s.name); }}
+                  title={s.hint}
+                >
+                  <span className="sample-thumb" dangerouslySetInnerHTML={{ __html: s.svg }} />
+                  <span className="sample-meta">
+                    <span className="sample-label">{s.label}</span>
+                    <span className="sample-hint">{s.hint}</span>
                   </span>
                 </button>
               ))}
@@ -121,6 +155,56 @@ export function Converter() {
                 <span className="state">{tw ? "on" : "off"}</span>
               </button>
             </div>
+          </div>
+
+          <div className="advanced-row">
+            <div className="adv-group">
+              <span className="adv-label">a11y</span>
+              <div className="seg seg-sm" role="tablist">
+                {[
+                  { id: "hidden", label: "decorative", hint: "aria-hidden (for icons next to text)" },
+                  { id: "labeled", label: "labeled", hint: "role=img + title prop" },
+                  { id: "none", label: "none", hint: "no aria attributes" },
+                ].map((o) => (
+                  <button
+                    key={o.id}
+                    className={a11y === o.id ? "active" : ""}
+                    onClick={() => setA11y(o.id)}
+                    title={o.hint}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {framework === "react" && (
+              <button
+                className={`toggle-pill switch ${forwardRef ? "on" : ""}`}
+                onClick={() => setForwardRef(!forwardRef)}
+                aria-pressed={forwardRef}
+                title="Wrap in React.forwardRef so parents can attach a ref"
+              >
+                <span className="dot" />
+                <span>forwardRef</span>
+                <span className="state">{forwardRef ? "on" : "off"}</span>
+              </button>
+            )}
+          </div>
+
+          <div className="config-summary">
+            <span className="sum-dot" />
+            <span className="sum-text">
+              {(() => {
+                const fw = framework === "react" ? "React" : framework === "vue" ? "Vue" : framework === "svelte" ? "Svelte" : "Solid";
+                const parts = [`${fw} · .${ext}`];
+                if (tw) parts.push("Tailwind className");
+                if (a11y === "hidden") parts.push("decorative (aria-hidden)");
+                else if (a11y === "labeled") parts.push("labeled (title prop adds role=img)");
+                else parts.push("no aria");
+                if (framework === "react" && forwardRef) parts.push("forwardRef");
+                return parts.join("  ·  ");
+              })()}
+            </span>
           </div>
 
           <CodeBlock code={code} lang={framework} changedLines={changedLines} />

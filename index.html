@@ -3,13 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vektorio — SVG to component</title>
+    <meta name="theme-color" content="#f6f4ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Vektorio — SVGs to React, Vue, Svelte, Solid components</title>
+    <meta name="description" content="Turn any SVG into a production-ready component — auto-detected props, optional TypeScript and Tailwind, batch library generation. 100% in your browser." />
+    <meta name="author" content="Berkin Düz" />
+    <link rel="canonical" href="https://vectorio-ten.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Vektorio — SVGs to React, Vue, Svelte, Solid" />
+    <meta property="og:description" content="Paste an SVG, get a clean component. Batch mode turns a folder of SVGs into a tree-shakable library. Runs entirely in your browser." />
+    <meta property="og:url" content="https://vectorio-ten.vercel.app/" />
+    <meta property="og:site_name" content="Vektorio" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vektorio — SVGs to components" />
+    <meta name="twitter:description" content="Paste an SVG, get a clean component. React, Vue, Svelte, Solid." />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="padding:48px;font-family:system-ui,sans-serif;max-width:640px;margin:0 auto;">
+        <h1>Vektorio needs JavaScript</h1>
+        <p>Vektorio runs entirely in your browser — which means it needs JavaScript enabled to parse your SVGs and generate components. Please enable JavaScript and reload.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

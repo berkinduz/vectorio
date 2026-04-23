@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components -- co-located hooks and constants are deliberate; refresh is a DX concern */
+/* eslint-disable react-hooks/set-state-in-effect -- animations use guarded, self-clearing state */
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Vek } from "./lib/engine.js";
 
@@ -73,15 +75,17 @@ export function TopBar({ view, setView, theme, setTheme }) {
 }
 
 export function CodeBlock({ code, lang, changedLines = [] }) {
-  const [prev, setPrev] = useState(code);
+  // Derive fadeKey during render — bumping it on each code change is cheaper
+  // than a state+effect pair and avoids the setState-in-effect anti-pattern.
+  // Bump fadeKey when code changes to retrigger the CSS fade-in animation.
   const [fadeKey, setFadeKey] = useState(0);
-
+  const prevRef = useRef(code);
   useEffect(() => {
-    if (code !== prev) {
+    if (prevRef.current !== code) {
+      prevRef.current = code;
       setFadeKey((k) => k + 1);
-      setPrev(code);
     }
-  }, [code, prev]);
+  }, [code]);
 
   const lines = code.split("\n");
   return (
@@ -143,13 +147,18 @@ export function useConverter(initialSvg) {
   const [name, setName] = useState("SunIcon");
   const [propToggles, setPropToggles] = useState({ color: true, size: true, stroke: false });
   const [changedLines, setChangedLines] = useState([]);
+  // A11y: "hidden" adds aria-hidden="true" (decorative icon next to text — most common);
+  // "labeled" adds a `title` prop that, when provided, renders <title> + role="img".
+  // "none" leaves it untouched.
+  const [a11y, setA11y] = useState("hidden");
+  const [forwardRef, setForwardRef] = useState(true);
 
   const parsed = useMemo(() => Vek.parseSvg(source), [source]);
 
   const code = useMemo(() => {
     if (!parsed.ok) return "// paste a valid SVG to begin";
-    return Vek.generate(framework, parsed, { name, ts, tw, props: propToggles });
-  }, [parsed, framework, name, ts, tw, propToggles]);
+    return Vek.generate(framework, parsed, { name, ts, tw, props: propToggles, a11y, forwardRef });
+  }, [parsed, framework, name, ts, tw, propToggles, a11y, forwardRef]);
 
   const prevCodeRef = useRef(code);
   useEffect(() => {
@@ -159,13 +168,11 @@ export function useConverter(initialSvg) {
     for (let i = 0; i < cur.length; i++) {
       if (prev[i] !== cur[i]) diff.push(i);
     }
-    if (diff.length && diff.length < cur.length) {
-      setChangedLines(diff);
-      const t = setTimeout(() => setChangedLines([]), 900);
-      prevCodeRef.current = code;
-      return () => clearTimeout(t);
-    }
     prevCodeRef.current = code;
+    if (!diff.length || diff.length >= cur.length) return;
+    setChangedLines(diff);
+    const t = setTimeout(() => setChangedLines([]), 900);
+    return () => clearTimeout(t);
   }, [code]);
 
   return {
@@ -175,6 +182,8 @@ export function useConverter(initialSvg) {
     tw, setTw,
     name, setName,
     propToggles, setPropToggles,
+    a11y, setA11y,
+    forwardRef, setForwardRef,
     parsed, code, changedLines,
   };
 }
