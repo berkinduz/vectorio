@@ -13,7 +13,7 @@ export class ErrorBoundary extends Component {
   componentDidCatch(error, info) {
     // Log for debugging; avoid noisy prod telemetry since the app is client-only.
     if (import.meta.env.DEV) {
-      console.error("Vektorio crashed:", error, info);
+      console.error("Vectorio crashed:", error, info);
     }
   }
 
@@ -50,7 +50,7 @@ export class ErrorBoundary extends Component {
           Something broke.
         </h1>
         <p style={{ color: "var(--fg-muted, #555)", lineHeight: 1.55, marginBottom: 24 }}>
-          Vektorio ran into an error it couldn't recover from. Your SVG data is local — nothing was lost on a server, because there is no server. Reload to try again, or clear local state if it keeps happening.
+          Vectorio ran into an error it couldn't recover from. Your SVG data is local — nothing was lost on a server, because there is no server. Reload to try again, or clear local state if it keeps happening.
         </p>
         <div style={{ display: "flex", gap: 10 }}>
           <button

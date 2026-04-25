@@ -1,4 +1,4 @@
-# Vektorio
+# Vectorio
 
 Turn SVGs into production-ready React, Vue, Svelte, or Solid components — with auto-detected props, optional TypeScript and Tailwind variants, and batch library generation. Runs entirely in your browser.
 

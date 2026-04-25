@@ -39,7 +39,61 @@ export const Icon = {
       <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" />
     </svg>
   ),
+  link: (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 13a5 5 0 007.07 0l3-3a5 5 0 00-7.07-7.07l-1.5 1.5M14 11a5 5 0 00-7.07 0l-3 3a5 5 0 007.07 7.07l1.5-1.5" />
+    </svg>
+  ),
 };
+
+const b64uEncode = (bytes) => {
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+};
+const b64uDecode = (str) => {
+  const pad = str.length % 4 ? 4 - (str.length % 4) : 0;
+  const b64 = (str + "=".repeat(pad)).replace(/-/g, "+").replace(/_/g, "/");
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+};
+
+export async function encodeShare(state) {
+  const json = JSON.stringify(state);
+  const bytes = new TextEncoder().encode(json);
+  const cs = new Blob([bytes]).stream().pipeThrough(new CompressionStream("gzip"));
+  const out = new Uint8Array(await new Response(cs).arrayBuffer());
+  return b64uEncode(out);
+}
+export async function decodeShare(str) {
+  const ds = new Blob([b64uDecode(str)]).stream().pipeThrough(new DecompressionStream("gzip"));
+  const text = await new Response(ds).text();
+  return JSON.parse(text);
+}
+
+export function ShareButton({ state }) {
+  const [status, setStatus] = useState("idle");
+  const onClick = async () => {
+    try {
+      const encoded = await encodeShare(state);
+      const url = `${window.location.origin}${window.location.pathname}#s=${encoded}`;
+      if (url.length > 6000) { setStatus("too-large"); setTimeout(() => setStatus("idle"), 1800); return; }
+      await navigator.clipboard.writeText(url);
+      window.history.replaceState(null, "", `#s=${encoded}`);
+      setStatus("copied");
+      setTimeout(() => setStatus("idle"), 1400);
+    } catch { setStatus("error"); setTimeout(() => setStatus("idle"), 1400); }
+  };
+  const label = status === "copied" ? "Link copied" : status === "too-large" ? "SVG too large to share" : status === "error" ? "Share failed" : "Share";
+  return (
+    <button className={`copy-btn ${status === "copied" ? "copied" : ""}`} onClick={onClick} title="Copy a link that restores this exact state">
+      {status === "copied" ? Icon.check : Icon.link}
+      <span>{label}</span>
+    </button>
+  );
+}
 
 export function useTheme() {
   const [theme, setTheme] = useState(() => localStorage.getItem("vek-theme") || "light");
@@ -51,21 +105,27 @@ export function useTheme() {
 }
 
 export function TopBar({ view, setView, theme, setTheme }) {
+  const go = (v) => (e) => {
+    // Preserve native cmd/ctrl/middle-click for open-in-new-tab.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    setView(v);
+  };
   return (
     <div className="topbar">
       <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-        <a className="wordmark" href="#" onClick={(e) => { e.preventDefault(); setView("landing"); }}>
-          <span>Vektorio</span>
+        <a className="wordmark" href="/" onClick={go("landing", "/")}>
+          <span>Vectorio</span>
           <span className="dot" />
         </a>
         <div className="nav">
-          <button className={`nav-btn ${view === "landing" ? "active" : ""}`} onClick={() => setView("landing")}>Overview</button>
-          <button className={`nav-btn ${view === "converter" ? "active" : ""}`} onClick={() => setView("converter")}>Converter</button>
-          <button className={`nav-btn ${view === "batch" ? "active" : ""}`} onClick={() => setView("batch")}>Batch</button>
+          <a className={`nav-btn ${view === "landing" ? "active" : ""}`} href="/" onClick={go("landing", "/")}>Overview</a>
+          <a className={`nav-btn ${view === "converter" ? "active" : ""}`} href="/convert" onClick={go("converter", "/convert")}>Converter</a>
+          <a className={`nav-btn ${view === "batch" ? "active" : ""}`} href="/batch" onClick={go("batch", "/batch")}>Batch</a>
         </div>
       </div>
       <div className="nav-meta">
-        <span>v2.4 · no account required</span>
+        <a className={`nav-btn ${view === "docs" ? "active" : ""}`} href="/docs" onClick={go("docs", "/docs")}>Docs</a>
         <button className="theme-toggle" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} title="Toggle theme">
           {theme === "dark" ? Icon.sun : Icon.moon}
         </button>
