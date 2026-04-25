@@ -1,15 +1,38 @@
 # Vectorio
 
-Turn SVGs into production-ready React, Vue, Svelte, or Solid components — with auto-detected props, optional TypeScript and Tailwind variants, and batch library generation. Runs entirely in your browser.
+Turn messy SVG exports into production-ready React, Vue, Svelte, or Solid components, then package whole folders as tree-shakable icon libraries. Vectorio runs entirely in your browser: no account, no upload, no backend.
+
+![Vectorio social preview](public/og-image.png)
+
+## Why Vectorio
+
+Design tools export SVGs with useful shapes and a lot of production noise: vendor namespaces, `data-*` attributes, duplicate gradient IDs, hard-coded colors, and one-off dimensions. Vectorio gives you a quick place to inspect, clean, convert, share, and package those files before they enter your repo.
+
+Use Vectorio when you need to:
+
+- convert one SVG into a clean component without setting up a build pipeline
+- compare React, Vue, Svelte, and Solid output from the same source
+- strip design-tool noise while preserving self-contained SVG behavior
+- prefix IDs so gradients, masks, and filters do not collide across icons
+- generate a zip-ready icon library from a folder or `.zip`
+- share a reproducible converter state without uploading the SVG
 
 ## Features
 
-- **Converter** — paste/drop an SVG, get a clean component with auto-detected `color`, `size`, and `strokeWidth` props
-- **Batch mode** — drop a folder or `.zip` of SVGs, download a tree-shakable library (`icons/`, `index.ts`, `README.md`) ready for your repo
-- Four frameworks: React, Vue, Svelte, Solid
-- TypeScript and Tailwind toggles
-- Dark mode
-- 100% client-side — nothing is uploaded
+- **Single-file converter** — paste, drop, or browse an SVG and copy a clean component.
+- **Batch mode** — drop a folder or `.zip` and download a library with component files, a barrel export, `package.json`, and README.
+- **Four frameworks** — React, Vue, Svelte, and Solid from the same source SVG.
+- **Production-minded cleanup** — strips exporter noise, removes empty groups, and prefixes referenced IDs.
+- **Auto-detected props** — optional `color`, `size`, and `strokeWidth` props based on the source SVG.
+- **Output options** — TypeScript, Tailwind classes, accessibility modes, and React `forwardRef`.
+- **Share links** — converter state is compressed into the URL hash; the hash is not sent to a server.
+- **Private by design** — no uploads, no telemetry, no account.
+
+## When to use it
+
+Vectorio is not trying to replace build tools such as SVGR in a mature pipeline. It is most useful before that point: when you are cleaning design exports, validating output, making a quick component, sharing a broken SVG with a teammate, or turning a folder of product icons into a first-pass library.
+
+For fully automated repo workflows, keep using your build pipeline. For messy source SVGs and fast inspection, use Vectorio first.
 
 ## Getting started
 
@@ -24,6 +47,23 @@ Build:
 npm run build
 ```
 
+Preview the production build:
+
+```bash
+npm run preview
+```
+
 ## Stack
 
 Vite · React 19 · JSZip
+
+## Privacy
+
+Vectorio is a static client-side app. SVG parsing, cleanup, generation, zipping, and share-link encoding happen in the browser. The app has no backend and does not upload SVGs.
+
+## Roadmap
+
+- Engine fixture tests for SVG cleanup and framework output snapshots
+- Advanced output customization without crowding the main converter flow
+- Optional SVGO-powered optimization mode
+- CLI / npm package for repo automation
