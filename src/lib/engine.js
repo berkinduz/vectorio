@@ -1,4 +1,4 @@
-// Vektorio — SVG parsing + multi-framework code generation
+// Vectorio — SVG parsing + multi-framework code generation
 
 const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
@@ -48,7 +48,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
   // `stripColorFromChildren` — when color is bound at the root, remove hardcoded
   // stroke/fill attrs from children so the root binding isn't overridden.
   function cleanElement(el, prefix, referenced, opts = {}) {
-    const { iconType } = opts;
+    const { iconType, stats } = opts;
     // Remove comment and processing-instruction siblings — they stay as text nodes otherwise.
     const toRemove = [];
     for (const child of el.childNodes) {
@@ -56,6 +56,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
         toRemove.push(child);
       }
     }
+    if (stats) stats.commentsStripped += toRemove.length;
     toRemove.forEach((c) => c.parentNode?.removeChild(c));
 
     // Attribute cleanup.
@@ -86,12 +87,13 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
       if (CLEAN_STRIP_ATTRS.has(name)) {
         if (name === "id") {
           if (!referenced.has(attr.value)) attrsToRemove.push(name);
-          else el.setAttribute("id", `${prefix}-${attr.value}`);
+          else { el.setAttribute("id", `${prefix}-${attr.value}`); if (stats) stats.idsPrefixed++; }
         } else {
           attrsToRemove.push(name);
         }
       }
     }
+    if (stats) stats.attrsStripped += attrsToRemove.length;
     attrsToRemove.forEach((n) => el.removeAttribute(n));
 
     // Rewrite url(#x) and href="#x" references to the prefixed form.
@@ -116,6 +118,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
 
     // Drop empty <g> with no attributes (Figma leaves a lot of these).
     if (el.tagName && el.tagName.toLowerCase() === "g" && el.attributes.length === 0 && el.children.length === 0) {
+      if (stats) stats.emptyGroupsRemoved++;
       el.parentNode?.removeChild(el);
     }
   }
@@ -157,17 +160,27 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
   function parseSvg(source) {
     const trimmed = (source || "").trim();
     if (!trimmed) return { ok: false, error: "empty" };
+    const stats = {
+      prologStripped: 0,
+      commentsStripped: 0,
+      nsStripped: 0,
+      attrsStripped: 0,
+      rootAttrsStripped: 0,
+      idsPrefixed: 0,
+      emptyGroupsRemoved: 0,
+    };
     // Strip XML prolog and HTML comments up-front — DOMParser tolerates them
     // but they end up in the serialized output otherwise.
-    const preClean = trimmed
-      .replace(/<\?xml[^?]*\?>/g, "")
-      .replace(/<!DOCTYPE[^>]*>/gi, "")
-      .replace(/<!--[\s\S]*?-->/g, "")
-      // Design-tool namespaces (Sketch, Inkscape, Figma, Adobe) trip DOMParser
-      // in strict svg mode if their xmlns binding is absent — strip them.
-      .replace(/\s+(sketch|inkscape|sodipodi|figma|adobe-ns|ai|i):[\w-]+\s*=\s*"[^"]*"/gi, "")
-      .replace(/\s+xmlns:(sketch|inkscape|sodipodi|figma|adobe-ns|ai|i)\s*=\s*"[^"]*"/gi, "")
-      .trim();
+    const countAndReplace = (str, re, counterKey) => str.replace(re, () => { stats[counterKey] += 1; return ""; });
+    let preClean = trimmed;
+    preClean = countAndReplace(preClean, /<\?xml[^?]*\?>/g, "prologStripped");
+    preClean = countAndReplace(preClean, /<!DOCTYPE[^>]*>/gi, "prologStripped");
+    preClean = countAndReplace(preClean, /<!--[\s\S]*?-->/g, "commentsStripped");
+    // Design-tool namespaces (Sketch, Inkscape, Figma, Adobe) trip DOMParser
+    // in strict svg mode if their xmlns binding is absent — strip them.
+    preClean = countAndReplace(preClean, /\s+(sketch|inkscape|sodipodi|figma|adobe-ns|ai|i):[\w-]+\s*=\s*"[^"]*"/gi, "nsStripped");
+    preClean = countAndReplace(preClean, /\s+xmlns:(sketch|inkscape|sodipodi|figma|adobe-ns|ai|i)\s*=\s*"[^"]*"/gi, "nsStripped");
+    preClean = preClean.trim();
     try {
       const doc = new DOMParser().parseFromString(preClean, "image/svg+xml");
       const err = doc.querySelector("parsererror");
@@ -197,6 +210,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
       const cleanOpts = {
         root,
         iconType: multicolor ? null : iconType,
+        stats,
       };
       for (const child of Array.from(root.children)) {
         cleanElement(child, prefix, referenced, cleanOpts);
@@ -204,7 +218,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
       // Root attr cleanup (keep only whitelist + xmlns).
       for (const attr of Array.from(root.attributes)) {
         if (attr.name.startsWith("xmlns")) continue;
-        if (!ROOT_WHITELIST.has(attr.name)) root.removeAttribute(attr.name);
+        if (!ROOT_WHITELIST.has(attr.name)) { root.removeAttribute(attr.name); stats.rootAttrsStripped++; }
       }
 
       const attrs = {};
@@ -252,6 +266,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
         props,
         raw: preClean,
         prefix,
+        stats,
       };
     } catch {
       return { ok: false, error: "exception" };

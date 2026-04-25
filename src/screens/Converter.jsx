@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Vek } from "../lib/engine.js";
-import { useConverter, FrameworkTabs, CodeBlock, CopyButton, Icon } from "../components.jsx";
+import { useConverter, FrameworkTabs, CodeBlock, CopyButton, ShareButton, decodeShare, Icon } from "../components.jsx";
 
 export function Converter() {
   const conv = useConverter();
@@ -8,10 +8,28 @@ export function Converter() {
 
   const [drag, setDrag] = useState(false);
 
-  const onDrop = async (e) => {
-    e.preventDefault();
-    setDrag(false);
-    const file = e.dataTransfer.files?.[0];
+  useEffect(() => {
+    const m = window.location.hash.match(/^#s=(.+)$/);
+    if (!m) return;
+    (async () => {
+      try {
+        const s = await decodeShare(m[1]);
+        if (typeof s.source === "string") setSource(s.source);
+        if (s.framework) setFramework(s.framework);
+        if (typeof s.ts === "boolean") setTs(s.ts);
+        if (typeof s.tw === "boolean") setTw(s.tw);
+        if (typeof s.name === "string") setName(s.name);
+        if (s.propToggles) setPropToggles(s.propToggles);
+        if (s.a11y) setA11y(s.a11y);
+        if (typeof s.forwardRef === "boolean") setForwardRef(s.forwardRef);
+      } catch { /* invalid hash, ignore */ }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const shareState = { source, framework, ts, tw, name, propToggles, a11y, forwardRef };
+
+  const ingestFile = async (file) => {
     if (!file || !file.name.endsWith(".svg")) return;
     const text = await file.text();
     setSource(text);
@@ -20,21 +38,53 @@ export function Converter() {
     if (pascal) setName(pascal + "Icon");
   };
 
+  const onDrop = async (e) => {
+    e.preventDefault();
+    setDrag(false);
+    await ingestFile(e.dataTransfer.files?.[0]);
+  };
+
+  const onBrowse = async (e) => {
+    await ingestFile(e.target.files?.[0]);
+    e.target.value = "";
+  };
+
   const previewInner = parsed.ok ? { __html: source } : null;
   const ext = framework === "vue" ? "vue" : framework === "svelte" ? "svelte" : ts ? "tsx" : "jsx";
 
   return (
     <div className="converter">
+      <h1 className="sr-only">Convert SVG to React, Vue, Svelte, or Solid component</h1>
       <div className="conv-pane left">
         <div className="pane-head">
           <div className="pane-title">Source · SVG</div>
-          <div style={{ display: "flex", gap: 6 }}>
-            <button className="toggle-pill" onClick={() => setSource(Vek.DEFAULT_SVG)}>Reset</button>
-            <button className="toggle-pill" onClick={() => setSource("")}>Clear</button>
-          </div>
+          <button className="toggle-pill" onClick={() => setSource("")} disabled={!source}>Clear</button>
         </div>
 
         <div className="pane-body">
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="section-title">
+              <span>SVG markup</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "var(--fg-faint)", textTransform: "none", letterSpacing: 0 }}>paste, drop, or</span>
+                <label className="browse-btn">
+                  <input type="file" accept=".svg,image/svg+xml" onChange={onBrowse} style={{ display: "none" }} />
+                  <span>Browse .svg</span>
+                </label>
+              </span>
+            </div>
+            <textarea
+              className={`svg-source ${drag ? "drag" : ""}`}
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+              onDragLeave={() => setDrag(false)}
+              onDrop={onDrop}
+              spellCheck={false}
+              placeholder="<svg ...>&#10;  <path .../>&#10;</svg>"
+            />
+          </div>
+
           <div className="preview-well">
             <div className="preview-canvas">
               {parsed.ok ? <div dangerouslySetInnerHTML={previewInner} /> : <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-faint)" }}>invalid</span>}
@@ -57,7 +107,6 @@ export function Converter() {
               <strong>Multi-color icon</strong> — detected {parsed.colors.length} distinct colors. Turning on <code>color</code> would flatten them all to one value. Keep it off to preserve the palette.
             </div>
           )}
-
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <div className="section-title">Auto-detected props</div>
             <div className="chips">
@@ -102,22 +151,28 @@ export function Converter() {
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0 }}>
-            <div className="section-title">
-              <span>SVG markup</span>
-              <span>{parsed.ok ? "valid" : "paste or drop below"}</span>
-            </div>
-            <textarea
-              className={`svg-source ${drag ? "drag" : ""}`}
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
-              onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
-              onDragLeave={() => setDrag(false)}
-              onDrop={onDrop}
-              spellCheck={false}
-              placeholder="<svg ...>&#10;  <path .../>&#10;</svg>"
-            />
-          </div>
+          {parsed.ok && (() => {
+            const s = parsed.stats || {};
+            const parts = [];
+            if (s.prologStripped) parts.push(`prolog removed`);
+            if (s.commentsStripped) parts.push(`${s.commentsStripped} comment${s.commentsStripped > 1 ? "s" : ""} stripped`);
+            if (s.nsStripped) parts.push(`${s.nsStripped} design-tool attr${s.nsStripped > 1 ? "s" : ""} stripped`);
+            const totalAttrs = (s.attrsStripped || 0) + (s.rootAttrsStripped || 0);
+            if (totalAttrs) parts.push(`${totalAttrs} attribute${totalAttrs > 1 ? "s" : ""} stripped`);
+            if (s.idsPrefixed) parts.push(`${s.idsPrefixed} id${s.idsPrefixed > 1 ? "s" : ""} prefixed`);
+            if (s.emptyGroupsRemoved) parts.push(`${s.emptyGroupsRemoved} empty group${s.emptyGroupsRemoved > 1 ? "s" : ""} removed`);
+            return (
+              <div className="cleaner-summary">
+                <span className="cleaner-head">
+                  <span className="cleaner-dot" />
+                  <span className="cleaner-label">Auto-cleaned</span>
+                </span>
+                <span className="cleaner-hint">strips design-tool noise, prefixes ids, removes color overrides that would break the <code>color</code> prop</span>
+                <span className="cleaner-body">{parts.length ? parts.join(" · ") : "this SVG was already clean — nothing to strip"}</span>
+              </div>
+            );
+          })()}
+
         </div>
       </div>
 
@@ -212,6 +267,7 @@ export function Converter() {
           <div className="code-foot">
             <span>{name}.{ext}  ·  {code.split("\n").length} lines  ·  {new Blob([code]).size} B</span>
             <div style={{ display: "flex", gap: 8 }}>
+              <ShareButton state={shareState} />
               <button className="copy-btn" onClick={() => {
                 const blob = new Blob([code], { type: "text/plain" });
                 const url = URL.createObjectURL(blob);
