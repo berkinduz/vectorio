@@ -134,6 +134,33 @@ describe("Vek.generate", () => {
     expect(code).toContain("title: '',");
   });
 
+  it("supports React memo and default export output", () => {
+    const parsed = Vek.parseSvg(messyDesignExport);
+    const code = Vek.generate("react", parsed, {
+      ...frameworkConfig,
+      name: "MemoBoltIcon",
+      memo: true,
+      defaultExport: true,
+    });
+
+    expect(code).toContain("const MemoBoltIcon = React.memo(React.forwardRef");
+    expect(code).toContain("export default MemoBoltIcon;");
+    expect(code).not.toContain("export const MemoBoltIcon");
+  });
+
+  it("supports Solid default exports", () => {
+    const parsed = Vek.parseSvg(messyDesignExport);
+    const code = Vek.generate("solid", parsed, {
+      ...frameworkConfig,
+      name: "DefaultBoltIcon",
+      defaultExport: true,
+    });
+
+    expect(code).toContain("function DefaultBoltIcon(props: IconProps)");
+    expect(code).toContain("export default DefaultBoltIcon;");
+    expect(code).not.toContain("export function DefaultBoltIcon");
+  });
+
   it("keeps multicolor React output from flattening child fills", () => {
     const parsed = Vek.parseSvg(multicolorSvg);
     const code = Vek.generate("react", parsed, {

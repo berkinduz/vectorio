@@ -4,7 +4,7 @@ import { useConverter, FrameworkTabs, CodeBlock, CopyButton, ShareButton, decode
 
 export function Converter() {
   const conv = useConverter();
-  const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, a11y, setA11y, forwardRef, setForwardRef, parsed, code, changedLines } = conv;
+  const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, a11y, setA11y, forwardRef, setForwardRef, advanced, setAdvanced, outputName, parsed, code, changedLines } = conv;
 
   const [drag, setDrag] = useState(false);
 
@@ -22,12 +22,15 @@ export function Converter() {
         if (s.propToggles) setPropToggles(s.propToggles);
         if (s.a11y) setA11y(s.a11y);
         if (typeof s.forwardRef === "boolean") setForwardRef(s.forwardRef);
+        if (s.advanced) setAdvanced((prev) => ({ ...prev, ...s.advanced }));
       } catch { /* invalid hash, ignore */ }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const shareState = { source, framework, ts, tw, name, propToggles, a11y, forwardRef };
+  const shareState = { source, framework, ts, tw, name, propToggles, a11y, forwardRef, advanced };
+  const setAdvancedOption = (key, value) => setAdvanced((prev) => ({ ...prev, [key]: value }));
+  const cleanNameAffix = (value) => value.replace(/[^a-zA-Z0-9]/g, "");
 
   const ingestFile = async (file) => {
     if (!file || !file.name.endsWith(".svg")) return;
@@ -246,6 +249,63 @@ export function Converter() {
             )}
           </div>
 
+          <details className="advanced-panel">
+            <summary>
+              <span>Advanced output</span>
+              <span>{outputName}{advanced.defaultExport ? " · default export" : ""}{advanced.memo && framework === "react" ? " · memo" : ""}</span>
+            </summary>
+            <div className="advanced-panel-body">
+              <div className="adv-field-grid">
+                <label className="adv-field">
+                  <span>Prefix</span>
+                  <input
+                    value={advanced.namePrefix}
+                    onChange={(e) => setAdvancedOption("namePrefix", cleanNameAffix(e.target.value))}
+                    placeholder="App"
+                    spellCheck={false}
+                  />
+                </label>
+                <label className="adv-field">
+                  <span>Suffix</span>
+                  <input
+                    value={advanced.nameSuffix}
+                    onChange={(e) => setAdvancedOption("nameSuffix", cleanNameAffix(e.target.value))}
+                    placeholder="Icon"
+                    spellCheck={false}
+                  />
+                </label>
+              </div>
+
+              <div className="adv-toggle-row">
+                {(framework === "react" || framework === "solid") && (
+                  <button
+                    className={`toggle-pill switch ${advanced.defaultExport ? "on" : ""}`}
+                    onClick={() => setAdvancedOption("defaultExport", !advanced.defaultExport)}
+                    aria-pressed={advanced.defaultExport}
+                    title="Emit a default export instead of a named component export"
+                  >
+                    <span className="dot" />
+                    <span>default export</span>
+                    <span className="state">{advanced.defaultExport ? "on" : "off"}</span>
+                  </button>
+                )}
+                {framework === "react" && (
+                  <button
+                    className={`toggle-pill switch ${advanced.memo ? "on" : ""}`}
+                    onClick={() => setAdvancedOption("memo", !advanced.memo)}
+                    aria-pressed={advanced.memo}
+                    title="Wrap the generated React component in memo"
+                  >
+                    <span className="dot" />
+                    <span>memo</span>
+                    <span className="state">{advanced.memo ? "on" : "off"}</span>
+                  </button>
+                )}
+              </div>
+              <p>Advanced options change generated code only. The source SVG and base component name stay untouched.</p>
+            </div>
+          </details>
+
           <div className="config-summary">
             <span className="sum-dot" />
             <span className="sum-text">
@@ -257,6 +317,8 @@ export function Converter() {
                 else if (a11y === "labeled") parts.push("labeled (title prop adds role=img)");
                 else parts.push("no aria");
                 if (framework === "react" && forwardRef) parts.push("forwardRef");
+                if (framework === "react" && advanced.memo) parts.push("memo");
+                if ((framework === "react" || framework === "solid") && advanced.defaultExport) parts.push("default export");
                 return parts.join("  ·  ");
               })()}
             </span>
@@ -265,14 +327,14 @@ export function Converter() {
           <CodeBlock code={code} lang={framework} changedLines={changedLines} />
 
           <div className="code-foot">
-            <span>{name}.{ext}  ·  {code.split("\n").length} lines  ·  {new Blob([code]).size} B</span>
+            <span>{outputName}.{ext}  ·  {code.split("\n").length} lines  ·  {new Blob([code]).size} B</span>
             <div style={{ display: "flex", gap: 8 }}>
               <ShareButton state={shareState} />
               <button className="copy-btn" onClick={() => {
                 const blob = new Blob([code], { type: "text/plain" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
-                a.href = url; a.download = `${name}.${ext}`; a.click();
+                a.href = url; a.download = `${outputName}.${ext}`; a.click();
                 URL.revokeObjectURL(url);
               }}>
                 {Icon.download}<span>Download</span>
