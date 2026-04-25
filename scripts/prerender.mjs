@@ -49,24 +49,25 @@ const ROUTES = {
   },
   "/docs": {
     title: "Documentation — Vectorio",
-    desc: "How Vectorio converts, cleans, and ships SVG icons. Options reference, input methods, what the cleaner removes, share link mechanics, and privacy details.",
+    desc: "Current Vectorio documentation: converter, batch mode, SVG cleaning behavior, advanced output options, framework output, share links, and privacy.",
     h1: "Vectorio documentation — how it works",
     body: `
-      <p>Full documentation for Vectorio: how the converter and batch modes work, every option and what it does, what the SVG cleaner removes, how auto-detected props are chosen, share link mechanics, and privacy guarantees.</p>
+      <p>Full documentation for Vectorio: how the converter and batch modes work, every option and what it does, what the SVG cleaner removes, how auto-detected props are chosen, advanced output options, share link mechanics, and privacy guarantees.</p>
       <h2>Covered in the docs</h2>
       <ul>
-        <li>Quick start — paste, pick framework, copy</li>
-        <li>Converter reference — inputs, outputs, live preview</li>
-        <li>Batch reference — folder/zip input, naming, bulk rename, export structure</li>
-        <li>Options reference — TypeScript, Tailwind, forwardRef, a11y modes, auto-detected props</li>
-        <li>What Vectorio cleans — Figma/Sketch namespaces, data attributes, ID collisions</li>
-        <li>Auto-detected props — color, size, and stroke detection</li>
-        <li>Share links — gzip+base64url encoding, 6K URL limit, privacy</li>
-        <li>Privacy — no analytics, no telemetry, fully client-side</li>
+        <li>Quick start — choose Converter or Batch, load SVGs, copy or export</li>
+        <li>Converter reference — inputs, preview metadata, cleaner summary, samples</li>
+        <li>Advanced output — prefix/suffix, React memo, React/Solid default exports</li>
+        <li>Batch reference — folder/zip input, filtering, per-icon actions, bulk rename, export structure</li>
+        <li>Cleaning — structural cleanup, ID prefixing, and clean-vs-optimize behavior</li>
+        <li>Auto-detected props — color, size, and strokeWidth behavior</li>
+        <li>Framework output — React, Vue, Svelte, and Solid output differences</li>
+        <li>Share links — gzip+base64url encoding, included settings, URL limits, privacy</li>
+        <li>Privacy — no SVG upload, no analytics, fully client-side processing</li>
       </ul>
     `,
     schemaName: "Vectorio Documentation",
-    schemaDesc: "Complete reference for Vectorio's SVG converter and batch icon library generator — options, cleaning behavior, share links, and privacy.",
+    schemaDesc: "Complete reference for Vectorio's SVG converter and batch icon library generator — cleaning behavior, advanced output, framework output, share links, and privacy.",
     isArticle: true,
   },
 };
