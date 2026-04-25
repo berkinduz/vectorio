@@ -12,13 +12,13 @@
   <rect width="1200" height="630" fill="url(#bg)"/>
   <g transform="translate(80,90)">
     <text font-family="Georgia, 'Playfair Display', serif" font-size="28" fill="#2f8a5a" letter-spacing="2">VECTORIO</text>
-    <text y="130" font-family="Georgia, 'Playfair Display', serif" font-size="92" font-weight="600" fill="#14140f">
+    <text y="128" font-family="Georgia, 'Playfair Display', serif" font-size="88" font-weight="600" fill="#14140f">
       <tspan x="0">Paste messy SVG.</tspan>
     </text>
-    <text y="240" font-family="Georgia, 'Playfair Display', serif" font-size="92" font-weight="600" fill="#14140f">
-      <tspan x="0">Ship a </tspan>
+    <text y="230" font-family="Georgia, 'Playfair Display', serif" font-size="74" font-weight="600" fill="#14140f">
+      <tspan x="0">Ship </tspan>
       <tspan font-style="italic" fill="url(#accent)">clean</tspan>
-      <tspan> icon library.</tspan>
+      <tspan> icon libraries.</tspan>
     </text>
     <text y="340" font-family="Inter, system-ui, sans-serif" font-size="32" fill="#4a4a3f">
       React · Vue · Svelte · Solid — with TypeScript, Tailwind, and batch mode.

@@ -99,7 +99,7 @@ for (const [route, meta] of Object.entries(ROUTES)) {
     description: meta.schemaDesc,
     isPartOf: { "@id": ORIGIN + "/#website" },
     inLanguage: "en",
-    primaryImageOfPage: { "@id": ORIGIN + "/og-image.svg" },
+    primaryImageOfPage: { "@id": ORIGIN + "/og-image.png" },
     ...(meta.isArticle ? {
       headline: meta.h1,
       author: { "@type": "Person", name: "Berkin Düz" },
