@@ -89,8 +89,11 @@ export function Landing({ setView }) {
         Paste messy SVG.<br />
         Ship a <em>clean</em> icon library.
       </h1>
-      <p className="hero-sub">
+      <p className="hero-sub hero-sub-desktop">
         Most tools hand you one React component. Vectorio gives you <strong>React, Vue, Svelte, or Solid</strong> — strips the Figma/Sketch junk, fixes id collisions that break multi-icon pages, and turns a folder of SVGs into a tree-shakable library with <code>package.json</code> + README. No CLI, no config, no account. Runs entirely in your browser.
+      </p>
+      <p className="hero-sub hero-sub-mobile">
+        Vectorio turns messy SVG exports into clean <strong>React, Vue, Svelte, or Solid</strong> components and icon libraries. It cleans design-tool noise, fixes ID collisions, and runs entirely in your browser.
       </p>
 
       <div className="demo-banner">
