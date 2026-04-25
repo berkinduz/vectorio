@@ -330,6 +330,9 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
 
     if (props.stroke && isStroke) {
       propsDecl.push({ name: "strokeWidth", def: parsed.strokeWidth, type: "number | string" });
+      rootAttrs.push(`strokeWidth={strokeWidth}`);
+    } else if (isStroke) {
+      rootAttrs.push(`strokeWidth="${parsed.strokeWidth}"`);
     }
     if (isStroke) {
       rootAttrs.push(`strokeLinecap="round"`);
@@ -441,6 +444,9 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
         name: "strokeWidth",
         def: `{ type: [Number, String], default: ${parsed.strokeWidth} }`,
       });
+      rootAttrs.push(`:stroke-width="strokeWidth"`);
+    } else if (isStroke) {
+      rootAttrs.push(`stroke-width="${parsed.strokeWidth}"`);
     }
     if (isStroke) {
       rootAttrs.push(`stroke-linecap="round"`);
@@ -465,10 +471,10 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
     const defineProps = propsObj.length
       ? (ts
           ? `const props = withDefaults(defineProps<{\n${propsObj
-              .map((p) => `  ${p.name}?: ${p.name === "color" ? "string" : "number | string"};`)
+              .map((p) => `  ${p.name}?: ${p.name === "color" || p.name === "title" ? "string" : "number | string"};`)
               .join("\n")}\n}>(), {\n${propsObj
               .map((p) => {
-                const d = p.name === "color" ? `'currentColor'` : p.name === "size" ? 24 : parsed.strokeWidth;
+                const d = p.name === "color" ? `'currentColor'` : p.name === "title" ? `''` : p.name === "size" ? 24 : parsed.strokeWidth;
                 return `  ${p.name}: ${d},`;
               })
               .join("\n")}\n});`
@@ -528,6 +534,9 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
           ? `export let strokeWidth: number | string = ${parsed.strokeWidth};`
           : `export let strokeWidth = ${parsed.strokeWidth};`
       );
+      rootAttrs.push(`stroke-width={strokeWidth}`);
+    } else if (isStroke) {
+      rootAttrs.push(`stroke-width="${parsed.strokeWidth}"`);
     }
     if (isStroke) {
       rootAttrs.push(`stroke-linecap="round"`);
@@ -601,6 +610,9 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
 
     if (props.stroke && isStroke) {
       propsDecl.push({ name: "strokeWidth", def: parsed.strokeWidth, type: "number | string" });
+      rootAttrs.push(`stroke-width={props.strokeWidth}`);
+    } else if (isStroke) {
+      rootAttrs.push(`stroke-width="${parsed.strokeWidth}"`);
     }
     if (isStroke) {
       rootAttrs.push(`stroke-linecap="round"`);

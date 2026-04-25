@@ -1,0 +1,151 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Vek.generate > generates stable react output 1`] = `
+"import * as React from "react";
+
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number | string;
+  color?: string;
+  strokeWidth?: number | string;
+  title?: string;
+  className?: string;
+}
+
+export const BoltIcon = React.forwardRef<SVGSVGElement, IconProps>(function BoltIcon({ size = 24, color = "currentColor", strokeWidth = 2, title = undefined, className, ...rest }: IconProps, ref: React.Ref<SVGSVGElement>) {
+  return (
+    <svg
+      ref={ref}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="none"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={\`inline-block shrink-0 \${className ?? ""}\`}
+      aria-hidden={title ? undefined : true}
+      role={title ? "img" : undefined}
+      aria-label={title}
+      {...rest}
+    >
+      <g>
+          
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </g>
+    </svg>
+  );
+});
+"
+`;
+
+exports[`Vek.generate > generates stable solid output 1`] = `
+"import { mergeProps } from "solid-js";
+
+type IconProps = {
+  size?: number | string;
+  color?: string;
+  strokeWidth?: number | string;
+  title?: string;
+};
+
+export function BoltIcon(props: IconProps) {
+  const merged = mergeProps({ size: 24, color: "currentColor", strokeWidth: 2, title: undefined }, props);
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={merged.size}
+      height={merged.size}
+      fill="none"
+      stroke={merged.color}
+      stroke-width={merged.strokeWidth}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="inline-block shrink-0"
+      aria-hidden={merged.title ? undefined : true}
+      role={merged.title ? "img" : undefined}
+      aria-label={merged.title}
+    >
+      {merged.title && <title>{merged.title}</title>}
+            <g>
+          
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </g>
+    </svg>
+  );
+}
+"
+`;
+
+exports[`Vek.generate > generates stable svelte output 1`] = `
+"<script lang="ts">
+  export let size: number | string = 24;
+  export let color: string = "currentColor";
+  export let strokeWidth: number | string = 2;
+  export let title: string = "";
+</script>
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  stroke={color}
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class="inline-block shrink-0"
+  aria-hidden={title ? undefined : true}
+  role={title ? "img" : undefined}
+  aria-label={title || undefined}
+>
+  <g>
+      
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+    </g>
+</svg>
+"
+`;
+
+exports[`Vek.generate > generates stable vue output 1`] = `
+"<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    :width="size"
+    :height="size"
+    fill="none"
+    :stroke="color"
+    :stroke-width="strokeWidth"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="inline-block shrink-0"
+    :aria-hidden="title ? undefined : 'true'"
+    :role="title ? 'img' : undefined"
+    :aria-label="title || undefined"
+  >
+    <g>
+        
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </g>
+  </svg>
+</template>
+
+<script setup lang="ts">
+const props = withDefaults(defineProps<{
+  size?: number | string;
+  color?: string;
+  strokeWidth?: number | string;
+  title?: string;
+}>(), {
+  size: 24,
+  color: 'currentColor',
+  strokeWidth: 2,
+  title: '',
+});
+</script>
+"
+`;
