@@ -174,29 +174,44 @@ export function Landing({ setView }) {
         </div>
       </div>
 
-      <section className="faq" aria-labelledby="faq-heading">
-        <h2 id="faq-heading" className="faq-heading">Frequently asked</h2>
-        <div className="faq-list">
-          <div className="faq-item">
-            <h3 className="faq-q">How do I convert an SVG to a React component?</h3>
-            <p className="faq-a">Paste your SVG or drop the file into the Converter. Vectorio parses it, auto-detects props like <code>color</code>, <code>size</code>, and <code>strokeWidth</code>, and outputs a typed React component you can copy in one click. Everything runs locally in your browser.</p>
+      <section className="positioning" aria-labelledby="positioning-heading">
+        <div className="positioning-head">
+          <div>
+            <div className="eyebrow">Where Vectorio fits</div>
+            <h2 id="positioning-heading" className="positioning-title">Not a replacement for your build tools. A faster path from messy SVG to shippable code.</h2>
           </div>
-          <div className="faq-item">
-            <h3 className="faq-q">Does Vectorio support Vue, Svelte, and Solid?</h3>
-            <p className="faq-a">Yes. The same SVG produces clean components for React, Vue, Svelte, or Solid — switch frameworks with a tab. TypeScript and Tailwind class output are optional toggles.</p>
+          <p>
+            Use Vectorio when you need to inspect, clean, share, or package SVGs before they enter a repo. Use your build pipeline when the conversion rules are already settled.
+          </p>
+        </div>
+
+        <div className="positioning-grid">
+          <div className="positioning-card">
+            <div className="positioning-kicker">SVGR / build pipeline</div>
+            <h3>Best when conversion is already automated.</h3>
+            <p>Great for repo-integrated React transforms, CLI workflows, and repeatable build steps once the team knows exactly how icons should be emitted.</p>
           </div>
-          <div className="faq-item">
-            <h3 className="faq-q">Can I turn a folder of SVGs into an icon library?</h3>
-            <p className="faq-a"><a href="/batch" className="faq-link" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; e.preventDefault(); setView("batch"); }}>Batch mode</a> takes a folder (or a zip) of SVGs and generates a tree-shakable library: one typed component per icon, a barrel <code>index</code>, <code>package.json</code>, and a README. Download the whole thing as a zip when you're done.</p>
+          <div className="positioning-card accent">
+            <div className="positioning-kicker">Vectorio</div>
+            <h3>Best before SVGs become code.</h3>
+            <p>Paste or drop exports from design tools, see what changed, fix ID collisions, switch frameworks, share a reproducible link, or ship a whole icon library as a zip.</p>
+            <div className="positioning-actions">
+              <button onClick={() => setView("converter")}>Try Converter →</button>
+              <button onClick={() => setView("batch")}>Build Library →</button>
+            </div>
           </div>
-          <div className="faq-item">
-            <h3 className="faq-q">Is my SVG uploaded to a server?</h3>
-            <p className="faq-a">No. Vectorio is 100% client-side — parsing, cleaning, and code generation all happen in your browser. No account, no upload, no telemetry.</p>
+          <div className="positioning-card">
+            <div className="positioning-kicker">Icon sets</div>
+            <h3>Best when you can use existing icons.</h3>
+            <p>Icon platforms are ideal for common symbols. Vectorio is for your own product icons, brand assets, and exported SVG folders that need production cleanup.</p>
           </div>
-          <div className="faq-item">
-            <h3 className="faq-q">How is this different from other SVG-to-component tools?</h3>
-            <p className="faq-a">Most tools give you a single React component. Vectorio covers four frameworks, cleans Figma and Sketch export junk, prefixes IDs to prevent collisions on multi-icon pages, and ships whole libraries — not just components.</p>
-          </div>
+        </div>
+
+        <div className="trust-strip" aria-label="Privacy and workflow guarantees">
+          <span>No upload</span>
+          <span>No account</span>
+          <span>No telemetry</span>
+          <span>Share links stay in the URL hash</span>
         </div>
       </section>
 
