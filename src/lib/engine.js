@@ -293,7 +293,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
 
   // ---- React ----
   function genReact(parsed, config) {
-    const { name, ts, tw, props, a11y = "hidden", forwardRef = false } = config;
+    const { name, ts, tw, props, a11y = "hidden", forwardRef = false, memo = false, defaultExport = false } = config;
     const isStroke = parsed.iconType === "stroke";
     const typeSig = ts ? `: IconProps` : "";
     const propsDecl = [];
@@ -370,15 +370,25 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
     const bind = (attr, propName) => `${attr}={${propName}}`;
     const inner = rewriteInner(parsed.inner, props, bind);
 
-    const importLine = forwardRef
-      ? (ts ? `import * as React from "react";\n\n` : `import { forwardRef } from "react";\n\n`)
-      : (ts ? `import * as React from "react";\n\n` : `import React from "react";\n\n`);
+    const importLine = ts
+      ? `import * as React from "react";\n\n`
+      : forwardRef && memo
+        ? `import { forwardRef, memo } from "react";\n\n`
+        : forwardRef
+          ? `import { forwardRef } from "react";\n\n`
+          : memo
+            ? `import { memo } from "react";\n\n`
+            : `import React from "react";\n\n`;
 
     if (forwardRef) {
+      const exportStart = defaultExport ? `const ${name} = ` : `export const ${name} = `;
+      const memoStart = memo ? (ts ? "React.memo(" : "memo(") : "";
+      const refStart = ts ? "React.forwardRef<SVGSVGElement, IconProps>" : "forwardRef";
+      const close = memo ? "));\n" : ");\n";
       return (
         importLine +
         typeBlock +
-        `export const ${name} = ${ts ? "React.forwardRef<SVGSVGElement, IconProps>" : "forwardRef"}(function ${name}({ ${destruct} }${typeSig}, ref${ts ? ": React.Ref<SVGSVGElement>" : ""}) {\n` +
+        `${exportStart}${memoStart}${refStart}(function ${name}({ ${destruct} }${typeSig}, ref${ts ? ": React.Ref<SVGSVGElement>" : ""}) {\n` +
         `  return (\n` +
         `    <svg\n` +
         `      ref={ref}\n` +
@@ -387,14 +397,18 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
         indent(inner, 6) +
         `\n    </svg>\n` +
         `  );\n` +
-        `});\n`
+        `}${close}` +
+        (defaultExport ? `\nexport default ${name};\n` : "")
       );
     }
 
+    const fnStart = `${memo ? (ts ? "React.memo(" : "memo(") : ""}function ${name}({ ${destruct} }${typeSig})`;
+    const exportStart = defaultExport ? "" : memo ? `export const ${name} = ` : "export ";
+    const close = memo ? ");\n" : "\n";
     return (
       importLine +
       typeBlock +
-      `export function ${name}({ ${destruct} }${typeSig}) {\n` +
+      `${exportStart}${fnStart} {\n` +
       `  return (\n` +
       `    <svg\n` +
       rootAttrs.map((a) => `      ${a}`).join("\n") +
@@ -402,7 +416,8 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
       indent(inner, 6) +
       `\n    </svg>\n` +
       `  );\n` +
-      `}\n`
+      `}${close}` +
+      (defaultExport ? `\nexport default ${name};\n` : "")
     );
   }
 
@@ -574,7 +589,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
 
   // ---- Solid ----
   function genSolid(parsed, config) {
-    const { name, ts, tw, props, a11y = "hidden" } = config;
+    const { name, ts, tw, props, a11y = "hidden", defaultExport = false } = config;
     const isStroke = parsed.iconType === "stroke";
     const propsDecl = [];
     const rootAttrs = [];
@@ -655,7 +670,7 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
     return (
       importLine +
       typeLine +
-      `export function ${name}(props${ts ? ": IconProps" : ""}) {\n` +
+      `${defaultExport ? "" : "export "}function ${name}(props${ts ? ": IconProps" : ""}) {\n` +
       destructDefaults +
       `  return (\n` +
       `    <svg\n` +
@@ -665,7 +680,8 @@ const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="
       indent(inner.replace(/props\./g, `${usedProps}.`), 6) +
       `\n    </svg>\n` +
       `  );\n` +
-      `}\n`
+      `}\n` +
+      (defaultExport ? `\nexport default ${name};\n` : "")
     );
   }
 

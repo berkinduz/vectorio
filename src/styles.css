@@ -545,6 +545,98 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+.advanced-panel {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.advanced-panel summary {
+  min-height: 36px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+.advanced-panel summary::-webkit-details-marker { display: none; }
+.advanced-panel summary::before {
+  content: "+";
+  color: var(--accent);
+  margin-right: 2px;
+}
+.advanced-panel[open] summary {
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg);
+}
+.advanced-panel[open] summary::before { content: "−"; }
+.advanced-panel summary span:first-child {
+  margin-right: auto;
+  color: var(--fg);
+}
+.advanced-panel summary span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fg-faint);
+}
+.advanced-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+.adv-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.adv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.adv-field span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+.adv-field input {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg-sunk);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.adv-field input:focus {
+  border-color: var(--rule-strong);
+  background: var(--bg);
+}
+.adv-toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.advanced-panel-body p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg-faint);
+}
+@media (max-width: 720px) {
+  .adv-field-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 .code-wrap {
   flex: 1;

@@ -212,13 +212,32 @@ export function useConverter(initialSvg) {
   // "none" leaves it untouched.
   const [a11y, setA11y] = useState("hidden");
   const [forwardRef, setForwardRef] = useState(true);
+  const [advanced, setAdvanced] = useState({
+    memo: false,
+    defaultExport: false,
+    namePrefix: "",
+    nameSuffix: "",
+  });
 
   const parsed = useMemo(() => Vek.parseSvg(source), [source]);
+  const outputName = useMemo(() => {
+    const next = `${advanced.namePrefix}${name}${advanced.nameSuffix}`.replace(/[^a-zA-Z0-9]/g, "");
+    return next || name;
+  }, [advanced.namePrefix, advanced.nameSuffix, name]);
 
   const code = useMemo(() => {
     if (!parsed.ok) return "// paste a valid SVG to begin";
-    return Vek.generate(framework, parsed, { name, ts, tw, props: propToggles, a11y, forwardRef });
-  }, [parsed, framework, name, ts, tw, propToggles, a11y, forwardRef]);
+    return Vek.generate(framework, parsed, {
+      name: outputName,
+      ts,
+      tw,
+      props: propToggles,
+      a11y,
+      forwardRef,
+      memo: advanced.memo,
+      defaultExport: advanced.defaultExport,
+    });
+  }, [parsed, framework, outputName, ts, tw, propToggles, a11y, forwardRef, advanced.memo, advanced.defaultExport]);
 
   const prevCodeRef = useRef(code);
   useEffect(() => {
@@ -244,6 +263,8 @@ export function useConverter(initialSvg) {
     propToggles, setPropToggles,
     a11y, setA11y,
     forwardRef, setForwardRef,
+    advanced, setAdvanced,
+    outputName,
     parsed, code, changedLines,
   };
 }
