@@ -2,6 +2,57 @@ import { useState } from "react";
 import { Vek } from "../lib/engine.js";
 import { useConverter, FrameworkTabs, CodeBlock, CopyButton } from "../components.jsx";
 
+const BEFORE_AFTER = [
+  {
+    label: "Figma export",
+    title: "Exporter noise gets stripped before it reaches your repo.",
+    before: `<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+  data-name="bolt" sketch:type="MSLayerGroup">
+  <!-- Generator: Figma Export -->
+  <g id="Layer_1" data-name="icon">
+    <g></g>
+    <path stroke="#000" stroke-width="2" .../>
+  </g>
+</svg>`,
+    after: `<svg viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  stroke={color}
+  strokeWidth={strokeWidth}>
+  <g>
+    <path d="M13 2L3 14..." />
+  </g>
+</svg>`,
+    note: "Namespaces, comments, data attrs, unused ids, and empty groups are removed. Useful attributes become props.",
+  },
+  {
+    label: "Gradient IDs",
+    title: "Repeated IDs are prefixed together with their references.",
+    before: `<defs>
+  <linearGradient id="paint0">...</linearGradient>
+</defs>
+<rect fill="url(#paint0)" />`,
+    after: `<defs>
+  <linearGradient id="v8k2a-paint0">...</linearGradient>
+</defs>
+<rect fill="url(#v8k2a-paint0)" />`,
+    note: "The same icon keeps a stable prefix, so gradients, masks, and filters do not collide across a page.",
+  },
+  {
+    label: "Multicolor icons",
+    title: "Palettes stay intact instead of being flattened to one color.",
+    before: `<path fill="#f4c77a" />
+<path fill="#e8a84a" />
+<circle fill="#ffffff" />`,
+    after: `<path fill="#f4c77a" />
+<path fill="#e8a84a" />
+<circle fill="#ffffff" />
+// color prop is disabled`,
+    note: "Vectorio detects multiple real colors and avoids generating a color prop that would break the original artwork.",
+  },
+];
+
 export function Landing({ setView }) {
   const conv = useConverter();
   const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, parsed, code, changedLines } = conv;
@@ -173,6 +224,38 @@ export function Landing({ setView }) {
           >Open Batch →</a>
         </div>
       </div>
+
+      <section className="before-after" aria-labelledby="before-after-heading">
+        <div className="before-after-head">
+          <div>
+            <div className="eyebrow">Before / after</div>
+            <h2 id="before-after-heading" className="before-after-title">What Vectorio actually cleans.</h2>
+          </div>
+          <p>These are the SVG issues that usually show up after a design export: metadata noise, duplicated IDs, hard-coded dimensions, and palette-breaking color props.</p>
+        </div>
+
+        <div className="before-after-grid">
+          {BEFORE_AFTER.map((item) => (
+            <article className="ba-card" key={item.label}>
+              <div className="ba-card-head">
+                <span>{item.label}</span>
+                <h3>{item.title}</h3>
+              </div>
+              <div className="ba-code-pair">
+                <div className="ba-code-block">
+                  <div className="ba-code-label">Before</div>
+                  <pre><code>{item.before}</code></pre>
+                </div>
+                <div className="ba-code-block after">
+                  <div className="ba-code-label">After</div>
+                  <pre><code>{item.after}</code></pre>
+                </div>
+              </div>
+              <p>{item.note}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="positioning" aria-labelledby="positioning-heading">
         <div className="positioning-head">
