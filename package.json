@@ -16,6 +16,7 @@
     "build": "vite build && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
+    "smoke": "node scripts/smoke-check.mjs",
     "test": "vitest run"
   },
   "dependencies": {

@@ -24,7 +24,7 @@ Use Vectorio when you need to:
 - **Four frameworks** — React, Vue, Svelte, and Solid from the same source SVG.
 - **Production-minded cleanup** — strips exporter noise, removes empty groups, and prefixes referenced IDs.
 - **Auto-detected props** — optional `color`, `size`, and `strokeWidth` props based on the source SVG.
-- **Output options** — TypeScript, Tailwind classes, accessibility modes, and React `forwardRef`.
+- **Output options** — TypeScript, Tailwind classes, accessibility modes, React `forwardRef`, React `memo`, default exports, and component prefix/suffix.
 - **Share links** — converter state is compressed into the URL hash; the hash is not sent to a server.
 - **Private by design** — no uploads, no telemetry, no account.
 
@@ -53,6 +53,15 @@ Preview the production build:
 npm run preview
 ```
 
+Run the launch checks:
+
+```bash
+npm run lint
+npm test
+npm run build
+npm run smoke
+```
+
 ## Stack
 
 Vite · React 19 · JSZip
@@ -63,7 +72,5 @@ Vectorio is a static client-side app. SVG parsing, cleanup, generation, zipping,
 
 ## Roadmap
 
-- Engine fixture tests for SVG cleanup and framework output snapshots
-- Advanced output customization without crowding the main converter flow
 - Optional SVGO-powered optimization mode
 - CLI / npm package for repo automation
