@@ -240,7 +240,7 @@ export function Landing({ setView }) {
         <div className="demo-reel-grid">
           <figure className="demo-reel-card">
             <div className="demo-reel-frame">
-              <video src="/converter.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Converter screen with framework switcher and sample gallery" />
+              <video src="/converter.mp4" poster="/converter.jpg" autoPlay loop muted playsInline preload="metadata" aria-label="Converter screen with framework switcher and sample gallery" />
             </div>
             <figcaption>
               <strong>One paste, four frameworks.</strong>
@@ -250,7 +250,7 @@ export function Landing({ setView }) {
 
           <figure className="demo-reel-card">
             <div className="demo-reel-frame dark">
-              <video src="/converter_short_dark.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Advanced output panel: TypeScript, Tailwind, a11y, forwardRef toggles" />
+              <video src="/converter_short_dark.mp4" poster="/converter_short_dark.jpg" autoPlay loop muted playsInline preload="metadata" aria-label="Advanced output panel: TypeScript, Tailwind, a11y, forwardRef toggles" />
             </div>
             <figcaption>
               <strong>Output you can actually ship.</strong>
@@ -260,7 +260,7 @@ export function Landing({ setView }) {
 
           <figure className="demo-reel-card">
             <div className="demo-reel-frame">
-              <video src="/batch.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Dropping a zip of SVGs onto the Batch screen to build an icon library" />
+              <video src="/batch.mp4" poster="/batch.jpg" autoPlay loop muted playsInline preload="metadata" aria-label="Dropping a zip of SVGs onto the Batch screen to build an icon library" />
             </div>
             <figcaption>
               <strong>A folder in. A library out.</strong>
