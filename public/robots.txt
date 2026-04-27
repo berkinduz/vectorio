@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vectorio-ten.vercel.app/sitemap.xml
+Sitemap: https://vectorio.app/sitemap.xml

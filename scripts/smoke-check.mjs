@@ -16,11 +16,11 @@ const requiredFiles = [
 
 const checks = [
   ["index.html", ["Vectorio", "og-image.png", "application/ld+json"]],
-  ["convert/index.html", ["Convert SVG to React", "https://vectorio-ten.vercel.app/convert"]],
-  ["batch/index.html", ["SVG icon library generator", "https://vectorio-ten.vercel.app/batch"]],
-  ["docs/index.html", ["Documentation", "advanced output options", "https://vectorio-ten.vercel.app/docs"]],
+  ["convert/index.html", ["Convert SVG to React", "https://vectorio.app/convert"]],
+  ["batch/index.html", ["SVG icon library generator", "https://vectorio.app/batch"]],
+  ["docs/index.html", ["Documentation", "advanced output options", "https://vectorio.app/docs"]],
   ["sitemap.xml", ["/", "/convert", "/batch", "/docs"]],
-  ["robots.txt", ["Sitemap: https://vectorio-ten.vercel.app/sitemap.xml"]],
+  ["robots.txt", ["Sitemap: https://vectorio.app/sitemap.xml"]],
 ];
 
 let failures = 0;

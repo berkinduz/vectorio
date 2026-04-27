@@ -919,6 +919,134 @@ a { color: inherit; text-decoration: none; }
 }
 .feature-cta:hover { border-bottom-color: var(--accent); }
 
+.demo-reel {
+  margin-top: 96px;
+  padding-top: 48px;
+  border-top: 1px solid var(--rule);
+}
+.demo-reel-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.58fr);
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 32px;
+}
+.demo-reel-head .eyebrow { margin-bottom: 18px; }
+.demo-reel-head > p {
+  color: var(--fg-muted);
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 44ch;
+}
+.demo-reel-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(34px, 5.2vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.demo-reel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.demo-reel-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 0;
+}
+.demo-reel-card:hover { z-index: 5; }
+.demo-reel-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--surface, #faf7f1);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  transform-origin: center center;
+  /* Expo-out — accelerates fast then settles, reads physical rather than mechanical. */
+  transition:
+    transform .55s cubic-bezier(.16, 1, .3, 1),
+    box-shadow .55s cubic-bezier(.16, 1, .3, 1),
+    border-color .35s ease;
+  will-change: transform;
+}
+.demo-reel-frame.dark {
+  background: #14110d;
+  border-color: #14110d;
+}
+.demo-reel-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: object-fit .35s ease;
+}
+.demo-reel-card:hover .demo-reel-frame {
+  /* 2x scale; frame's reserved 16:10 slot stays in flow so the page below doesn't shift. */
+  transform: scale(2);
+  box-shadow:
+    0 60px 140px -30px rgba(15, 12, 8, 0.5),
+    0 22px 50px -14px rgba(15, 12, 8, 0.28);
+  border-color: var(--fg-muted);
+}
+.demo-reel-card:hover .demo-reel-frame video {
+  /* Reveal the full frame — letterbox bars match the frame background so they read as padding. */
+  object-fit: contain;
+}
+/* Edge cards translate inward so the scaled frame doesn't clip page edges. */
+.demo-reel-card:first-child:hover .demo-reel-frame {
+  transform: scale(2) translateX(20%);
+}
+.demo-reel-card:last-child:hover .demo-reel-frame {
+  transform: scale(2) translateX(-20%);
+}
+.demo-reel-card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 2px;
+}
+.demo-reel-card figcaption strong {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--fg);
+}
+.demo-reel-card figcaption span {
+  font-size: 13px;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+@media (max-width: 900px) {
+  .demo-reel-head { grid-template-columns: 1fr; }
+  .demo-reel-grid { grid-template-columns: 1fr; gap: 28px; }
+  /* Don't scale on touch — there's no hover, and scale would clip on narrow screens. */
+  .demo-reel-card:hover .demo-reel-frame,
+  .demo-reel-card:first-child:hover .demo-reel-frame,
+  .demo-reel-card:last-child:hover .demo-reel-frame {
+    transform: none;
+    box-shadow: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-reel-frame { transition: none; }
+  .demo-reel-card:hover .demo-reel-frame,
+  .demo-reel-card:first-child:hover .demo-reel-frame,
+  .demo-reel-card:last-child:hover .demo-reel-frame {
+    transform: none;
+  }
+}
+@media (max-width: 720px) {
+  .demo-reel { margin-top: 64px; padding-top: 34px; }
+  .demo-reel-title { font-size: clamp(30px, 10vw, 40px); }
+}
+
 .before-after {
   margin-top: 96px;
   padding-top: 48px;

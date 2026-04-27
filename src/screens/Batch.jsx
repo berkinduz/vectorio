@@ -93,11 +93,22 @@ function isValidSvg(svg) {
   return /<svg[\s>]/i.test(t);
 }
 
+// macOS Finder zips include AppleDouble metadata under __MACOSX/ and ._-prefixed
+// shadows next to real files. They look like .svg by extension but are binary junk.
+function isMacJunkPath(path) {
+  if (path.startsWith("__MACOSX/") || path.includes("/__MACOSX/")) return true;
+  const base = path.split("/").pop() || "";
+  if (base.startsWith("._")) return true;
+  if (base === ".DS_Store" || base === "Thumbs.db") return true;
+  return false;
+}
+
 async function parseZipFile(file, skipped) {
   const zip = await JSZip.loadAsync(file);
   const entries = [];
   for (const [path, entry] of Object.entries(zip.files)) {
     if (entry.dir) continue;
+    if (isMacJunkPath(path)) continue;
     const lower = path.toLowerCase();
     const base = path.split("/").pop();
     if (!lower.endsWith(".svg")) {
@@ -125,12 +136,58 @@ async function parseZipFile(file, skipped) {
   return entries;
 }
 
+// Walk a dropped directory tree via the webkit FileSystem API. Returns flat File[]
+// with `webkitRelativePath` populated so folder-namespacing keeps working.
+async function collectDroppedFiles(dataTransfer) {
+  const items = dataTransfer.items;
+  if (!items || !items.length || typeof items[0].webkitGetAsEntry !== "function") {
+    return Array.from(dataTransfer.files || []);
+  }
+  const entries = [];
+  for (const item of items) {
+    const entry = item.webkitGetAsEntry?.();
+    if (entry) entries.push(entry);
+  }
+  if (!entries.length) return Array.from(dataTransfer.files || []);
+
+  const out = [];
+  const walk = async (entry, prefix) => {
+    if (isMacJunkPath(entry.name) || isMacJunkPath(prefix + entry.name)) return;
+    if (entry.isFile) {
+      const file = await new Promise((res, rej) => entry.file(res, rej));
+      // Stamp a relative path so existing folder-detection in ingestFiles works.
+      try {
+        Object.defineProperty(file, "webkitRelativePath", {
+          value: prefix + entry.name,
+          configurable: true,
+        });
+      } catch { /* webkitRelativePath is read-only on some platforms; folder will just be empty */ }
+      out.push(file);
+      return;
+    }
+    if (entry.isDirectory) {
+      const reader = entry.createReader();
+      // readEntries returns at most ~100 entries per call; loop until empty.
+      const all = [];
+      while (true) {
+        const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+        if (!batch.length) break;
+        all.push(...batch);
+      }
+      for (const child of all) await walk(child, prefix + entry.name + "/");
+    }
+  };
+  for (const entry of entries) await walk(entry, "");
+  return out;
+}
+
 async function ingestFiles(fileList) {
   const files = Array.from(fileList || []);
   const out = [];
   const skipped = [];
   for (const f of files) {
     const lower = f.name.toLowerCase();
+    if (isMacJunkPath(f.webkitRelativePath || f.name)) continue;
     if (lower.endsWith(".svg")) {
       const svg = await f.text();
       if (!isValidSvg(svg)) {
@@ -201,7 +258,15 @@ export function Batch() {
     const next = autoNamespace ? namespaceCollisions(added) : added;
     setIcons((cur) => {
       const keep = cur.some((i) => !i.sample) ? cur : [];
-      const combined = [...next, ...keep];
+      // Dedupe by id — StrictMode double-invokes this updater in dev; without
+      // dedupe a single drop ends up appended twice.
+      const seen = new Set();
+      const combined = [];
+      for (const item of [...next, ...keep]) {
+        if (seen.has(item.id)) continue;
+        seen.add(item.id);
+        combined.push(item);
+      }
       // Re-run namespacing across the combined set so a new drop resolves against existing too.
       return autoNamespace ? namespaceCollisions(combined) : combined;
     });
@@ -212,7 +277,8 @@ export function Batch() {
   const onDrop = async (e) => {
     e.preventDefault();
     setDrag(false);
-    addResult(await ingestFiles(e.dataTransfer.files));
+    const files = await collectDroppedFiles(e.dataTransfer);
+    addResult(await ingestFiles(files));
   };
 
   const onPickFiles = async (e) => {

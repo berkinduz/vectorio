@@ -5,7 +5,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const ORIGIN = "https://vectorio-ten.vercel.app";
+const ORIGIN = "https://vectorio.app";
 const DIST = path.resolve("dist");
 
 const ROUTES = {

@@ -228,6 +228,48 @@ export function Landing({ setView }) {
         </div>
       </div>
 
+      <section className="demo-reel" aria-labelledby="demo-reel-heading">
+        <div className="demo-reel-head">
+          <div>
+            <div className="eyebrow">See it in action</div>
+            <h2 id="demo-reel-heading" className="demo-reel-title">Three short loops. No narration needed.</h2>
+          </div>
+          <p>The interactive demo above is the fastest taste. These show what the full Converter and Batch screens add on top.</p>
+        </div>
+
+        <div className="demo-reel-grid">
+          <figure className="demo-reel-card">
+            <div className="demo-reel-frame">
+              <video src="/converter.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Converter screen with framework switcher and sample gallery" />
+            </div>
+            <figcaption>
+              <strong>One paste, four frameworks.</strong>
+              <span>React, Vue, Svelte, Solid — same input, four clean outputs.</span>
+            </figcaption>
+          </figure>
+
+          <figure className="demo-reel-card">
+            <div className="demo-reel-frame dark">
+              <video src="/converter_short_dark.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Advanced output panel: TypeScript, Tailwind, a11y, forwardRef toggles" />
+            </div>
+            <figcaption>
+              <strong>Output you can actually ship.</strong>
+              <span>TypeScript, Tailwind, a11y modes, forwardRef — toggled, not configured.</span>
+            </figcaption>
+          </figure>
+
+          <figure className="demo-reel-card">
+            <div className="demo-reel-frame">
+              <video src="/batch.mp4" autoPlay loop muted playsInline preload="metadata" aria-label="Dropping a zip of SVGs onto the Batch screen to build an icon library" />
+            </div>
+            <figcaption>
+              <strong>A folder in. A library out.</strong>
+              <span>Drop a zip or a folder, get a tree-shakable package with index + README.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section className="before-after" aria-labelledby="before-after-heading">
         <div className="before-after-head">
           <div>
