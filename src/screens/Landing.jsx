@@ -348,6 +348,7 @@ export function Landing({ setView }) {
         <div className="links">
           <a href="/docs" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; e.preventDefault(); setView("docs"); }}>Docs</a>
           <a href="https://github.com/berkinduz/vectorio" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://buymeacoffee.com/berkinduz" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
         </div>
       </div>
     </div>

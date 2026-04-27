@@ -274,6 +274,11 @@ export function Docs({ setView }) {
           <h3>How do I report a bug?</h3>
           <p>Open an issue on <a href="https://github.com/berkinduz/vectorio" target="_blank" rel="noopener noreferrer">GitHub</a>. Include the smallest SVG that reproduces the behavior if the bug is about parsing, cleaning, or output generation.</p>
         </section>
+
+        <section className="docs-thanks">
+          <h2>Found it useful?</h2>
+          <p>Vectorio is free, open source, and runs entirely in your browser — no subscriptions, no telemetry. If it saved you time, you can <a href="https://buymeacoffee.com/berkinduz" target="_blank" rel="noopener noreferrer">buy me a coffee</a>. Bug reports, feedback, and stars on <a href="https://github.com/berkinduz/vectorio" target="_blank" rel="noopener noreferrer">GitHub</a> are equally appreciated.</p>
+        </section>
       </article>
     </div>
   );
