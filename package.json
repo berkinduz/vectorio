@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/berkinduz/vectorio"
   },
-  "homepage": "https://vectorio-ten.vercel.app",
+  "homepage": "https://vectorio.app",
   "type": "module",
   "scripts": {
     "dev": "vite",

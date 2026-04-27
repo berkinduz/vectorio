@@ -9,7 +9,7 @@ const ACCENT_HUE = 145;
 const ACCENT_CHROMA = 0.11;
 const SERIF = "Playfair Display";
 
-const ORIGIN = "https://vectorio-ten.vercel.app";
+const ORIGIN = "https://vectorio.app";
 const ROUTE_META = {
   "/": {
     title: "Vectorio — SVGs to React, Vue, Svelte, Solid components",

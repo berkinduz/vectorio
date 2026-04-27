@@ -24,7 +24,7 @@ npm run smoke
 ## GitHub polish
 
 - Repository description: `Private browser tool for converting messy SVG exports into React, Vue, Svelte, or Solid components and icon libraries.`
-- Website URL: `https://vectorio-ten.vercel.app` until `vectorio.app` is connected.
+- Website URL: `https://vectorio.app` until `vectorio.app` is connected.
 - Suggested topics: `svg`, `react`, `vue`, `svelte`, `solid`, `icons`, `svg-converter`, `developer-tools`, `vite`.
 
 ## Known limitations
