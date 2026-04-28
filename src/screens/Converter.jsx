@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Vek } from "../lib/engine.js";
-import { useConverter, FrameworkTabs, CodeBlock, CopyButton, ShareButton, decodeShare, Icon } from "../components.jsx";
+import { useConverter, FrameworkTabs, CodeBlock, CopyButton, ShareButton, decodeShare, Icon, CoffeeToast, isCoffeeSuppressed } from "../components.jsx";
 
 export function Converter() {
   const conv = useConverter();
   const { source, setSource, framework, setFramework, ts, setTs, tw, setTw, name, setName, propToggles, setPropToggles, a11y, setA11y, forwardRef, setForwardRef, advanced, setAdvanced, outputName, parsed, code, changedLines } = conv;
 
   const [drag, setDrag] = useState(false);
+  const [coffeeOpen, setCoffeeOpen] = useState(false);
 
   useEffect(() => {
     const m = window.location.hash.match(/^#s=(.+)$/);
@@ -339,11 +340,12 @@ export function Converter() {
               }}>
                 {Icon.download}<span>Download</span>
               </button>
-              <CopyButton text={code} />
+              <CopyButton text={code} onCopy={() => { if (!isCoffeeSuppressed()) setCoffeeOpen(true); }} />
             </div>
           </div>
         </div>
       </div>
+      <CoffeeToast open={coffeeOpen} onClose={() => setCoffeeOpen(false)} />
     </div>
   );
 }

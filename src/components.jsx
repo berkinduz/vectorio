@@ -182,7 +182,7 @@ export function FrameworkTabs({ value, onChange }) {
   );
 }
 
-export function CopyButton({ text }) {
+export function CopyButton({ text, onCopy }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -191,11 +191,73 @@ export function CopyButton({ text }) {
         try { await navigator.clipboard.writeText(text); } catch { /* noop */ }
         setCopied(true);
         setTimeout(() => setCopied(false), 1400);
+        onCopy?.();
       }}
     >
       {copied ? Icon.check : Icon.copy}
       <span>{copied ? "Copied" : "Copy"}</span>
     </button>
+  );
+}
+
+// Suppression key bumps one full month after dismiss/skip — long enough that
+// repeat users aren't pestered, short enough to remind once a month.
+const COFFEE_KEY = "vectorio:coffee-suppressed-until";
+const COFFEE_SUPPRESS_DAYS = 30;
+const COFFEE_URL = "https://buymeacoffee.com/berkinduz";
+
+export function isCoffeeSuppressed() {
+  try {
+    const v = localStorage.getItem(COFFEE_KEY);
+    if (!v) return false;
+    return Date.now() < Number(v);
+  } catch { return false; }
+}
+function suppressCoffee() {
+  try {
+    localStorage.setItem(COFFEE_KEY, String(Date.now() + COFFEE_SUPPRESS_DAYS * 86400 * 1000));
+  } catch { /* noop */ }
+}
+
+export function CoffeeToast({ open, onClose }) {
+  // Auto-dismiss after 7s so it never lingers; closing via timer also suppresses
+  // future toasts so we don't replay if the user copies again immediately.
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => { suppressCoffee(); onClose?.(); }, 7000);
+    return () => clearTimeout(t);
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="coffee-toast" role="status" aria-live="polite">
+      <span className="coffee-toast-text">
+        Copied. Vectorio is free and runs in your browser — if it saved you time you can{" "}
+        <a href={COFFEE_URL} target="_blank" rel="noopener noreferrer" onClick={() => { suppressCoffee(); onClose?.(); }}>buy me a coffee</a>.
+      </span>
+      <button className="coffee-toast-dismiss" onClick={() => { suppressCoffee(); onClose?.(); }} aria-label="Dismiss">×</button>
+    </div>
+  );
+}
+
+export function CoffeeModal({ open, onClose }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose?.(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div className="coffee-modal-backdrop" onClick={onClose}>
+      <div className="coffee-modal" role="dialog" aria-modal="true" aria-labelledby="coffee-modal-title" onClick={(e) => e.stopPropagation()}>
+        <h3 id="coffee-modal-title">Library downloaded</h3>
+        <p>Vectorio is free, open source, and runs entirely in your browser — no subscriptions, no telemetry. If it saved you time, you can support development with a coffee.</p>
+        <div className="coffee-modal-actions">
+          <button className="coffee-modal-skip" onClick={() => { suppressCoffee(); onClose?.(); }}>No thanks</button>
+          <a className="coffee-modal-cta" href={COFFEE_URL} target="_blank" rel="noopener noreferrer" onClick={() => { suppressCoffee(); onClose?.(); }}>Buy me a coffee</a>
+        </div>
+      </div>
+    </div>
   );
 }
 
