@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import JSZip from "jszip";
 import { Vek } from "../lib/engine.js";
-import { FrameworkTabs, CodeBlock, Icon } from "../components.jsx";
+import { FrameworkTabs, CodeBlock, Icon, CoffeeModal, isCoffeeSuppressed } from "../components.jsx";
 
 function toPascal(s) {
   return s.replace(/[^a-z0-9]+/gi, " ").trim().split(" ").filter(Boolean)
@@ -249,6 +249,7 @@ export function Batch() {
   const [autoNamespace, setAutoNamespace] = useState(true);
   const [filter, setFilter] = useState("");
   const [copiedId, setCopiedId] = useState(null);
+  const [coffeeOpen, setCoffeeOpen] = useState(false);
 
   const addResult = (result) => {
     const { out: added, skipped: newSkipped } = result;
@@ -400,6 +401,7 @@ export function Batch() {
 
       setDownloaded(true);
       setTimeout(() => setDownloaded(false), 1600);
+      if (!isCoffeeSuppressed()) setCoffeeOpen(true);
     } finally {
       setDownloading(false);
     }
@@ -670,6 +672,7 @@ export function Batch() {
           </button>
         </div>
       </div>
+      <CoffeeModal open={coffeeOpen} onClose={() => setCoffeeOpen(false)} />
     </div>
   );
 }
