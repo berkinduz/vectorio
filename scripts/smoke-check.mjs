@@ -11,7 +11,7 @@ const requiredFiles = [
   "robots.txt",
   "sitemap.xml",
   "og-image.png",
-  "favicon.svg",
+  "favicon.png",
 ];
 
 const checks = [

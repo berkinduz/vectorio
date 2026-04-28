@@ -2,13 +2,13 @@
 
 # Vectorio
 
-**Paste messy SVG. Ship a clean icon library.**
+**Convert SVGs into clean components.**
 
 Multi-framework SVG-to-component generator with batch folder-to-library mode. React, Vue, Svelte, Solid — strips Figma/Sketch export junk, fixes ID collisions, generates a tree-shakable icon library with `package.json` and README. Runs entirely in your browser.
 
 [**Try it at vectorio.app →**](https://vectorio.app)
 
-![Vectorio — Paste messy SVG. Ship a clean icon library.](public/og-image.png)
+![Vectorio — Convert SVGs into clean components.](public/og-image.png)
 
 </div>
 
@@ -171,4 +171,3 @@ Bug reports, feature requests, and PRs welcome. The fastest path:
 MIT © [Berkin Düz](https://github.com/berkinduz)
 
 If Vectorio saved you time, you can [buy me a coffee](https://buymeacoffee.com/berkinduz) ☕
-

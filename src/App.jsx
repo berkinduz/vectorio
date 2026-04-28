@@ -20,7 +20,7 @@ const ROUTE_META = {
     imageType: "image/png",
     imageWidth: "1200",
     imageHeight: "630",
-    imageAlt: "Vectorio — Paste messy SVG. Ship a clean icon library.",
+    imageAlt: "Vectorio — Convert SVGs into clean components.",
   },
   "/convert": {
     title: "Convert SVG to React, Vue, Svelte, Solid component — Vectorio",
@@ -47,7 +47,7 @@ const ROUTE_META = {
     imageType: "image/png",
     imageWidth: "1200",
     imageHeight: "630",
-    imageAlt: "Vectorio — Paste messy SVG. Ship a clean icon library.",
+    imageAlt: "Vectorio — Convert SVGs into clean components.",
   },
 };
 

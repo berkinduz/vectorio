@@ -64,7 +64,7 @@ const ROUTES = {
     imageType: "image/png",
     imageWidth: "1200",
     imageHeight: "630",
-    imageAlt: "Vectorio — Paste messy SVG. Ship a clean icon library.",
+    imageAlt: "Vectorio — Convert SVGs into clean components.",
     h1: "Vectorio documentation — how it works",
     body: `
       <p>Full documentation for Vectorio: how the converter and batch modes work, every option and what it does, what the SVG cleaner removes, how auto-detected props are chosen, advanced output options, share link mechanics, and privacy guarantees.</p>
