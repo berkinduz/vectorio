@@ -14,6 +14,13 @@ export const Icon = {
       <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
     </svg>
   ),
+  coffee: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 8h1a4 4 0 010 8h-1" />
+      <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
+      <path d="M6 2v3M10 2v3M14 2v3" />
+    </svg>
+  ),
   check: (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6L9 17l-5-5" />
@@ -105,6 +112,7 @@ export function useTheme() {
 }
 
 export function TopBar({ view, setView, theme, setTheme }) {
+  const [coffeeOpen, setCoffeeOpen] = useState(false);
   const go = (v) => (e) => {
     // Preserve native cmd/ctrl/middle-click for open-in-new-tab.
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
@@ -126,10 +134,14 @@ export function TopBar({ view, setView, theme, setTheme }) {
       </div>
       <div className="nav-meta">
         <a className={`nav-btn ${view === "docs" ? "active" : ""}`} href="/docs" onClick={go("docs", "/docs")}>Docs</a>
+        <button className="theme-toggle" onClick={() => setCoffeeOpen(true)} title="Buy me a coffee" aria-label="Buy me a coffee">
+          {Icon.coffee}
+        </button>
         <button className="theme-toggle" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} title="Toggle theme">
           {theme === "dark" ? Icon.sun : Icon.moon}
         </button>
       </div>
+      <CoffeeModal open={coffeeOpen} onClose={() => setCoffeeOpen(false)} title="Buy me a coffee" body="Vectorio is free, open source, and runs entirely in your browser. If it saves you time, you can support development with a coffee — every bit helps." />
     </div>
   );
 }
@@ -239,7 +251,7 @@ export function CoffeeToast({ open, onClose }) {
   );
 }
 
-export function CoffeeModal({ open, onClose }) {
+export function CoffeeModal({ open, onClose, title = "Library downloaded", body = "Vectorio is free, open source, and runs entirely in your browser. If it saved you time, you can support development with a coffee." }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === "Escape") onClose?.(); };
@@ -250,8 +262,8 @@ export function CoffeeModal({ open, onClose }) {
   return (
     <div className="coffee-modal-backdrop" onClick={onClose}>
       <div className="coffee-modal" role="dialog" aria-modal="true" aria-labelledby="coffee-modal-title" onClick={(e) => e.stopPropagation()}>
-        <h3 id="coffee-modal-title">Library downloaded</h3>
-        <p>Vectorio is free, open source, and runs entirely in your browser — no subscriptions, no telemetry. If it saved you time, you can support development with a coffee.</p>
+        <h3 id="coffee-modal-title">{title}</h3>
+        <p>{body}</p>
         <div className="coffee-modal-actions">
           <button className="coffee-modal-skip" onClick={() => { suppressCoffee(); onClose?.(); }}>No thanks</button>
           <a className="coffee-modal-cta" href={COFFEE_URL} target="_blank" rel="noopener noreferrer" onClick={() => { suppressCoffee(); onClose?.(); }}>Buy me a coffee</a>
