@@ -478,8 +478,8 @@ export function Batch() {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 16, flexWrap: "wrap" }}>
-        <div className="section-title" style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+      <div className="batch-toolbar">
+        <div className="section-title batch-toolbar-title">
           <span>{icons.some((i) => i.sample) ? "Preview — sample icons below" : `Library contents · ${icons.length}`}</span>
           {icons.length > 6 && (
             <input
@@ -496,8 +496,8 @@ export function Batch() {
             </span>
           )}
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg-faint)", letterSpacing: "0.04em" }}>
+        <div className="batch-toolbar-controls">
+          <span className="batch-toolbar-output">
             output · <span style={{ color: "var(--accent)" }}>.{targetExt}</span>
           </span>
           <FrameworkTabs value={framework} onChange={setFramework} />

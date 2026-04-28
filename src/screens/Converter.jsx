@@ -192,9 +192,9 @@ export function Converter() {
         </div>
 
         <div className="code-surface">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div className="conv-output-toolbar">
             <FrameworkTabs value={framework} onChange={setFramework} />
-            <div style={{ display: "flex", gap: 4 }}>
+            <div className="conv-output-toggles">
               <button
                 className={`toggle-pill switch ${ts ? "on" : ""}`}
                 onClick={() => setTs(!ts)}
