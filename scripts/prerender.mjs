@@ -183,6 +183,7 @@ for (const [route, meta] of Object.entries(ROUTES)) {
   // Strip the React script and JSON-LD graph — the 404 is a static page.
   html = html.replace(/<script type="module"[^>]*><\/script>/g, "");
   html = html.replace(/<script src="\/assets\/[^"]*"[^>]*><\/script>/g, "");
+  html = html.replace(/<link rel="modulepreload"[^>]*>/g, "");
 
   const notFoundBody = `
     <main class="not-found-page">
