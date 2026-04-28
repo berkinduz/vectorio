@@ -401,7 +401,9 @@ export function Batch() {
 
       setDownloaded(true);
       setTimeout(() => setDownloaded(false), 1600);
-      if (!isCoffeeSuppressed()) setCoffeeOpen(true);
+      // Delay so the OS save dialog has time to close before our modal appears
+      // — otherwise the modal opens behind the dialog and gets missed.
+      if (!isCoffeeSuppressed()) setTimeout(() => setCoffeeOpen(true), 600);
     } finally {
       setDownloading(false);
     }

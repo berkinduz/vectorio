@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { TopBar, useTheme } from "./components.jsx";
 import { Landing } from "./screens/Landing.jsx";
 import { Converter } from "./screens/Converter.jsx";
@@ -112,6 +113,7 @@ export default function App() {
       {view === "converter" && <Converter />}
       {view === "batch" && <Batch />}
       {view === "docs" && <Docs setView={setView} />}
+      <Analytics />
     </div>
   );
 }
