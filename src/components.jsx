@@ -212,10 +212,9 @@ export function CopyButton({ text, onCopy }) {
   );
 }
 
-// Suppression key bumps one full month after dismiss/skip — long enough that
-// repeat users aren't pestered, short enough to remind once a month.
+// Suppression key is set only after an explicit dismiss/support action.
 const COFFEE_KEY = "vectorio:coffee-suppressed-until";
-const COFFEE_SUPPRESS_DAYS = 30;
+const COFFEE_SUPPRESS_DAYS = 14;
 const COFFEE_URL = "https://buymeacoffee.com/berkinduz";
 
 export function isCoffeeSuppressed() {
@@ -232,11 +231,11 @@ function suppressCoffee() {
 }
 
 export function CoffeeToast({ open, onClose }) {
-  // Auto-dismiss after 7s so it never lingers; closing via timer also suppresses
-  // future toasts so we don't replay if the user copies again immediately.
+  // Auto-dismiss after 7s so it never lingers. Only explicit actions suppress
+  // future prompts.
   useEffect(() => {
     if (!open) return;
-    const t = setTimeout(() => { suppressCoffee(); onClose?.(); }, 7000);
+    const t = setTimeout(() => { onClose?.(); }, 7000);
     return () => clearTimeout(t);
   }, [open, onClose]);
   if (!open) return null;
