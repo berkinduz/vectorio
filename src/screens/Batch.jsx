@@ -667,10 +667,10 @@ export function Batch() {
             className="btn-primary"
             onClick={generateZip}
             disabled={!icons.length || downloading || hasIssues}
-            title={hasIssues ? "Fix the flagged names above first" : undefined}
+            title={!icons.length ? "Add SVGs to your library first" : hasIssues ? "Fix the flagged names above first" : undefined}
           >
             {downloaded ? Icon.check : Icon.download}
-            <span>{downloading ? "Generating…" : downloaded ? "Downloaded" : hasIssues ? "Fix issues to download" : "Download icon library"}</span>
+            <span>{downloading ? "Generating…" : downloaded ? "Downloaded" : !icons.length ? "Add icons to download" : hasIssues ? "Fix issues to download" : "Download icon library"}</span>
           </button>
         </div>
       </div>
