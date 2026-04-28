@@ -138,6 +138,50 @@ for (const [route, meta] of Object.entries(ROUTES)) {
   console.log(`prerendered ${route} → ${path.relative(process.cwd(), path.join(outDir, "index.html"))}`);
 }
 
+// Static 404 page. Vercel auto-serves this with a real 404 status when no
+// route matches — we deliberately don't ship the React bundle here so unknown
+// URLs return fast HTML, no flash of landing-page content, and SEO crawlers
+// see a proper 404 instead of a 200 SPA fallback.
+{
+  const notFoundCanonical = ORIGIN + "/404";
+  const notFoundTitle = "Page not found — Vectorio";
+  const notFoundDesc = "The page you tried to open does not exist on Vectorio. Open the converter, batch library generator, or documentation to continue.";
+  let html = base.replace(/<title>[^<]*<\/title>/, `<title>${notFoundTitle}</title>`);
+  html = replaceAttr(html, /<meta name="description"[^>]*>/, "content", notFoundDesc);
+  html = replaceAttr(html, /<meta property="og:title"[^>]*>/, "content", notFoundTitle);
+  html = replaceAttr(html, /<meta property="og:description"[^>]*>/, "content", notFoundDesc);
+  html = replaceAttr(html, /<meta property="og:url"[^>]*>/, "content", notFoundCanonical);
+  html = replaceAttr(html, /<meta name="twitter:title"[^>]*>/, "content", notFoundTitle);
+  html = replaceAttr(html, /<meta name="twitter:description"[^>]*>/, "content", notFoundDesc);
+  html = replaceAttr(html, /<meta name="twitter:url"[^>]*>/, "content", notFoundCanonical);
+  html = replaceAttr(html, /<link rel="canonical"[^>]*>/, "href", notFoundCanonical);
+  html = html.replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex, follow" />');
+
+  // Strip the React script and JSON-LD graph — the 404 is a static page.
+  html = html.replace(/<script type="module"[^>]*><\/script>/g, "");
+  html = html.replace(/<script src="\/assets\/[^"]*"[^>]*><\/script>/g, "");
+
+  const notFoundBody = `
+    <main class="not-found-page">
+      <div class="not-found-inner">
+        <div class="not-found-eyebrow">404</div>
+        <h1 class="not-found-title">This page slipped through the export.</h1>
+        <p class="not-found-sub">The URL you opened does not exist. Use one of these to continue:</p>
+        <nav class="not-found-links">
+          <a href="/">Home</a>
+          <a href="/convert">Converter</a>
+          <a href="/batch">Batch</a>
+          <a href="/docs">Docs</a>
+        </nav>
+      </div>
+    </main>
+  `;
+  html = html.replace(/<div id="root"><\/div>[\s\S]*?<\/noscript>/, `<div id="root">${notFoundBody}</div>\n    <noscript></noscript>`);
+
+  await fs.writeFile(path.join(DIST, "404.html"), html);
+  console.log("wrote 404.html");
+}
+
 // Regenerate sitemap with today's lastmod so it doesn't rot between deploys.
 const today = new Date().toISOString().slice(0, 10);
 const sitemapRoutes = [

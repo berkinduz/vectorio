@@ -1,7 +1,4 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/((?!convert|batch|docs|assets|favicon\\.svg|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
-  ]
+  "trailingSlash": false
 }
