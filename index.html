@@ -3,189 +3,253 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f6f4ee" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14140f" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="theme-color"
+      content="#f6f4ee"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#14140f"
+      media="(prefers-color-scheme: dark)"
+    />
     <meta name="color-scheme" content="light dark" />
 
     <title>Vectorio — SVGs to React, Vue, Svelte, Solid components</title>
-    <meta name="description" content="Turn any SVG into a production-ready component — auto-detected props, optional TypeScript and Tailwind, batch library generation. 100% in your browser." />
-    <meta name="keywords" content="svg to react, svg to vue, svg to svelte, svg to solid, svg component generator, svg to jsx, svg to tsx, svg cleaner, figma svg export, sketch svg export, icon library generator, svgr alternative" />
+    <meta
+      name="description"
+      content="Turn any SVG into a production-ready component — auto-detected props, optional TypeScript and Tailwind, batch library generation. 100% in your browser."
+    />
+    <meta
+      name="keywords"
+      content="svg to react, svg to vue, svg to svelte, svg to solid, svg component generator, svg to jsx, svg to tsx, svg cleaner, figma svg export, sketch svg export, icon library generator, svgr alternative"
+    />
     <meta name="author" content="Berkin Düz" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1"
+    />
     <meta name="application-name" content="Vectorio" />
     <link rel="canonical" href="https://vectorio.app/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Vectorio — SVGs to React, Vue, Svelte, Solid" />
-    <meta property="og:description" content="Paste an SVG, get a clean component. Batch mode turns a folder of SVGs into a tree-shakable library. Runs entirely in your browser." />
+    <meta
+      property="og:title"
+      content="Vectorio — SVGs to React, Vue, Svelte, Solid"
+    />
+    <meta
+      property="og:description"
+      content="Paste an SVG, get a clean component. Batch mode turns a folder of SVGs into a tree-shakable library. Runs entirely in your browser."
+    />
     <meta property="og:url" content="https://vectorio.app/" />
     <meta property="og:site_name" content="Vectorio" />
     <meta property="og:image" content="https://vectorio.app/og-image.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Vectorio — Paste messy SVG. Ship a clean icon library." />
+    <meta
+      property="og:image:alt"
+      content="Vectorio — Paste messy SVG. Ship a clean icon library."
+    />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vectorio — SVGs to components" />
-    <meta name="twitter:description" content="Paste an SVG, get a clean component. React, Vue, Svelte, Solid." />
+    <meta
+      name="twitter:description"
+      content="Paste an SVG, get a clean component. React, Vue, Svelte, Solid."
+    />
     <meta name="twitter:image" content="https://vectorio.app/og-image.png" />
-    <meta name="twitter:image:alt" content="Vectorio — Paste messy SVG. Ship a clean icon library." />
+    <meta
+      name="twitter:image:alt"
+      content="Vectorio — Paste messy SVG. Ship a clean icon library."
+    />
     <meta name="twitter:url" content="https://vectorio.app/" />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://vectorio.app/#website",
-          "url": "https://vectorio.app/",
-          "name": "Vectorio",
-          "description": "SVG to React, Vue, Svelte, and Solid component converter with batch icon library generation.",
-          "inLanguage": "en"
-        },
-        {
-          "@type": "SoftwareApplication",
-          "@id": "https://vectorio.app/#app",
-          "name": "Vectorio",
-          "url": "https://vectorio.app/",
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Any (browser-based)",
-          "description": "Turn any SVG into a production-ready React, Vue, Svelte, or Solid component. Cleans Figma and Sketch exports, fixes id collisions, and turns a folder of SVGs into a tree-shakable icon library. Runs entirely in the browser.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://vectorio.app/#website",
+            "url": "https://vectorio.app/",
+            "name": "Vectorio",
+            "description": "SVG to React, Vue, Svelte, and Solid component converter with batch icon library generation.",
+            "inLanguage": "en"
           },
-          "featureList": [
-            "SVG to React, Vue, Svelte, or Solid components",
-            "Optional TypeScript output",
-            "Optional Tailwind class support",
-            "Auto-detected props (color, size, stroke)",
-            "Figma and Sketch export cleaner",
-            "ID collision prefixing",
-            "Batch folder-to-library generation with package.json and README",
-            "Shareable links via URL",
-            "100% client-side — no account, no upload"
-          ],
-          "author": {
-            "@type": "Person",
-            "name": "Berkin Düz"
-          }
-        },
-        {
-          "@type": "VideoObject",
-          "@id": "https://vectorio.app/#video-converter",
-          "name": "Vectorio Converter — one paste, four frameworks",
-          "description": "Demo of Vectorio's Converter: paste a single SVG and see clean React, Vue, Svelte, and Solid components generated instantly with toggleable TypeScript and Tailwind output.",
-          "thumbnailUrl": "https://vectorio.app/converter.jpg",
-          "contentUrl": "https://vectorio.app/converter.mp4",
-          "uploadDate": "2026-04-27",
-          "duration": "PT10S",
-          "isFamilyFriendly": true,
-          "publisher": { "@id": "https://vectorio.app/#website" }
-        },
-        {
-          "@type": "VideoObject",
-          "@id": "https://vectorio.app/#video-output",
-          "name": "Vectorio advanced output options",
-          "description": "Demo of Vectorio's advanced output panel: TypeScript, Tailwind, a11y modes (decorative, labeled, none), and forwardRef toggled without configuration.",
-          "thumbnailUrl": "https://vectorio.app/converter_short_dark.jpg",
-          "contentUrl": "https://vectorio.app/converter_short_dark.mp4",
-          "uploadDate": "2026-04-27",
-          "duration": "PT7S",
-          "isFamilyFriendly": true,
-          "publisher": { "@id": "https://vectorio.app/#website" }
-        },
-        {
-          "@type": "VideoObject",
-          "@id": "https://vectorio.app/#video-batch",
-          "name": "Vectorio Batch — folder of SVGs to icon library",
-          "description": "Demo of Vectorio's Batch mode: drop a zip or folder of SVGs and receive a tree-shakable icon library with package.json and README.",
-          "thumbnailUrl": "https://vectorio.app/batch.jpg",
-          "contentUrl": "https://vectorio.app/batch.mp4",
-          "uploadDate": "2026-04-27",
-          "duration": "PT11S",
-          "isFamilyFriendly": true,
-          "publisher": { "@id": "https://vectorio.app/#website" }
-        },
-        {
-          "@type": "FAQPage",
-          "@id": "https://vectorio.app/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "How do I convert an SVG to a React component?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Paste your SVG or drop the file into the Vectorio Converter. It parses the SVG, auto-detects props like color, size, and strokeWidth, and outputs a typed React component you can copy in one click. Everything runs locally in your browser."
-              }
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://vectorio.app/#app",
+            "name": "Vectorio",
+            "url": "https://vectorio.app/",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any (browser-based)",
+            "description": "Turn any SVG into a production-ready React, Vue, Svelte, or Solid component. Cleans Figma and Sketch exports, fixes id collisions, and turns a folder of SVGs into a tree-shakable icon library. Runs entirely in the browser.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
             },
-            {
-              "@type": "Question",
-              "name": "Does Vectorio support Vue, Svelte, and Solid?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. The same SVG produces clean components for React, Vue, Svelte, or Solid — switch frameworks with a tab. TypeScript and Tailwind class output are optional toggles."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Can I turn a folder of SVGs into an icon library?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. Batch mode takes a folder or a zip of SVGs and generates a tree-shakable library: one typed component per icon, a barrel index, package.json, and a README. You can download the whole thing as a zip."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is my SVG uploaded to a server?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "No. Vectorio is 100% client-side — parsing, cleaning, and code generation all happen in your browser. No account, no upload, no telemetry."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How is Vectorio different from other SVG-to-component tools?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Most tools give you a single React component. Vectorio covers four frameworks (React, Vue, Svelte, Solid), cleans Figma and Sketch export junk, prefixes IDs to prevent collisions on multi-icon pages, and generates whole icon libraries — not just components."
-              }
+            "featureList": [
+              "SVG to React, Vue, Svelte, or Solid components",
+              "Optional TypeScript output",
+              "Optional Tailwind class support",
+              "Auto-detected props (color, size, stroke)",
+              "Figma and Sketch export cleaner",
+              "ID collision prefixing",
+              "Batch folder-to-library generation with package.json and README",
+              "Shareable links via URL",
+              "100% client-side — no account, no upload"
+            ],
+            "author": {
+              "@type": "Person",
+              "name": "Berkin Düz"
             }
-          ]
-        }
-      ]
-    }
+          },
+          {
+            "@type": "VideoObject",
+            "@id": "https://vectorio.app/#video-converter",
+            "name": "Vectorio Converter — one paste, four frameworks",
+            "description": "Demo of Vectorio's Converter: paste a single SVG and see clean React, Vue, Svelte, and Solid components generated instantly with toggleable TypeScript and Tailwind output.",
+            "thumbnailUrl": "https://vectorio.app/converter.jpg",
+            "contentUrl": "https://vectorio.app/converter.mp4",
+            "uploadDate": "2026-04-27",
+            "duration": "PT10S",
+            "isFamilyFriendly": true,
+            "publisher": { "@id": "https://vectorio.app/#website" }
+          },
+          {
+            "@type": "VideoObject",
+            "@id": "https://vectorio.app/#video-output",
+            "name": "Vectorio advanced output options",
+            "description": "Demo of Vectorio's advanced output panel: TypeScript, Tailwind, a11y modes (decorative, labeled, none), and forwardRef toggled without configuration.",
+            "thumbnailUrl": "https://vectorio.app/converter_short_dark.jpg",
+            "contentUrl": "https://vectorio.app/converter_short_dark.mp4",
+            "uploadDate": "2026-04-27",
+            "duration": "PT7S",
+            "isFamilyFriendly": true,
+            "publisher": { "@id": "https://vectorio.app/#website" }
+          },
+          {
+            "@type": "VideoObject",
+            "@id": "https://vectorio.app/#video-batch",
+            "name": "Vectorio Batch — folder of SVGs to icon library",
+            "description": "Demo of Vectorio's Batch mode: drop a zip or folder of SVGs and receive a tree-shakable icon library with package.json and README.",
+            "thumbnailUrl": "https://vectorio.app/batch.jpg",
+            "contentUrl": "https://vectorio.app/batch.mp4",
+            "uploadDate": "2026-04-27",
+            "duration": "PT11S",
+            "isFamilyFriendly": true,
+            "publisher": { "@id": "https://vectorio.app/#website" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://vectorio.app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I convert an SVG to a React component?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Paste your SVG or drop the file into the Vectorio Converter. It parses the SVG, auto-detects props like color, size, and strokeWidth, and outputs a typed React component you can copy in one click. Everything runs locally in your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Vectorio support Vue, Svelte, and Solid?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The same SVG produces clean components for React, Vue, Svelte, or Solid — switch frameworks with a tab. TypeScript and Tailwind class output are optional toggles."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I turn a folder of SVGs into an icon library?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Batch mode takes a folder or a zip of SVGs and generates a tree-shakable library: one typed component per icon, a barrel index, package.json, and a README. You can download the whole thing as a zip."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is my SVG uploaded to a server?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Vectorio is 100% client-side — parsing, cleaning, and code generation all happen in your browser. No account, no upload, no telemetry."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How is Vectorio different from other SVG-to-component tools?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Most tools give you a single React component. Vectorio covers four frameworks (React, Vue, Svelte, Solid), cleans Figma and Sketch export junk, prefixes IDs to prevent collisions on multi-icon pages, and generates whole icon libraries — not just components."
+                }
+              }
+            ]
+          }
+        ]
+      }
     </script>
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="1718f045-a40e-4d1b-a90e-69501134d39d" data-domains="vectorio.app" data-do-not-track="true"></script>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="1718f045-a40e-4d1b-a90e-69501134d39d"
+      data-domains="vectorio.app"
+      data-do-not-track="true"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
     <noscript>
-      <div style="padding:48px;font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;line-height:1.6;">
+      <div
+        style="
+          padding: 48px;
+          font-family: system-ui, sans-serif;
+          max-width: 720px;
+          margin: 0 auto;
+          line-height: 1.6;
+        "
+      >
         <h1>Vectorio — SVG to React, Vue, Svelte, and Solid components</h1>
-        <p>Vectorio is a browser-based tool that turns SVG files into production-ready components. Paste an SVG or drop a folder and get clean, typed components for React, Vue, Svelte, or Solid — with auto-detected props, optional TypeScript, and batch icon library generation.</p>
+        <p>
+          Vectorio is a browser-based tool that turns SVG files into
+          production-ready components. Paste an SVG or drop a folder and get
+          clean, typed components for React, Vue, Svelte, or Solid — with
+          auto-detected props, optional TypeScript, and batch icon library
+          generation.
+        </p>
         <h2>Features</h2>
         <ul>
           <li>Convert any SVG to a React, Vue, Svelte, or Solid component</li>
           <li>Auto-detects color, size, and stroke props</li>
           <li>Optional TypeScript output and Tailwind class support</li>
-          <li>Cleans Figma and Sketch export junk (xmlns:sketch, data-* attrs, empty groups)</li>
+          <li>
+            Cleans Figma and Sketch export junk (xmlns:sketch, data-* attrs,
+            empty groups)
+          </li>
           <li>Prefixes IDs to prevent collisions across multi-icon pages</li>
-          <li>Batch mode: turn a folder of SVGs into a tree-shakable icon library with package.json and README</li>
+          <li>
+            Batch mode: turn a folder of SVGs into a tree-shakable icon library
+            with package.json and README
+          </li>
           <li>100% client-side — nothing is uploaded, no account required</li>
         </ul>
-        <p>Vectorio needs JavaScript enabled to parse SVGs and generate components. Please enable JavaScript and reload.</p>
+        <p>
+          Vectorio needs JavaScript enabled to parse SVGs and generate
+          components. Please enable JavaScript and reload.
+        </p>
       </div>
     </noscript>
     <script type="module" src="/src/main.jsx"></script>
