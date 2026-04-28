@@ -152,6 +152,12 @@ for (const [route, meta] of Object.entries(ROUTES)) {
         <h1>${meta.h1}</h1>
         ${meta.body.trim()}
         <p>Vectorio needs JavaScript enabled to parse SVGs and generate components. Please enable JavaScript and reload.</p>
+        <nav aria-label="Primary pages">
+          <a href="/">Overview</a>
+          <a href="/convert">Converter</a>
+          <a href="/batch">Batch</a>
+          <a href="/docs">Docs</a>
+        </nav>
       </div>`;
   html = html.replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>${noscriptBody}\n    </noscript>`);
 

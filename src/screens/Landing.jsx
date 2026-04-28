@@ -84,7 +84,7 @@ export function Landing({ setView }) {
 
   return (
     <div className="landing">
-      <h2 className="eyebrow">SVG to React, Vue, Svelte &amp; Solid · batch icon libraries</h2>
+      <div className="eyebrow">SVG to React, Vue, Svelte &amp; Solid · batch icon libraries</div>
       <h1 className="hero-head">
         Paste messy SVG.<br />
         Ship a <em>clean</em> icon library.

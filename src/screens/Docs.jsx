@@ -56,7 +56,7 @@ export function Docs({ setView }) {
 
       <article className="docs-content">
         <header className="docs-header">
-          <h2 className="eyebrow">Documentation · current product reference</h2>
+          <div className="eyebrow">Documentation · current product reference</div>
           <h1 className="docs-title">Convert, clean, inspect, and ship SVG icons.</h1>
           <p className="docs-lead">
             Vectorio is a browser tool for turning self-contained SVG files into React, Vue, Svelte, or Solid components. It also turns folders of SVGs into a downloadable icon library. This page documents the current behavior, including cleanup, advanced output options, share links, and privacy.
