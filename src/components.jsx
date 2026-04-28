@@ -252,18 +252,62 @@ export function CoffeeToast({ open, onClose }) {
 }
 
 export function CoffeeModal({ open, onClose, title = "Library downloaded", body = "Vectorio is free, open source, and runs entirely in your browser. If it saved you time, you can support development with a coffee." }) {
+  const dialogRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => { if (e.key === "Escape") onClose?.(); };
+    // Remember what had focus so we can restore it on close.
+    previouslyFocusedRef.current = document.activeElement;
+    // Move focus into the dialog after paint so screen readers announce it.
+    const t = setTimeout(() => {
+      const first = dialogRef.current?.querySelector("a, button:not([disabled])");
+      first?.focus();
+    }, 0);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose?.();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusables = dialogRef.current?.querySelectorAll(
+        'a, button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables || !focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      // Wrap focus inside the dialog so Tab cannot escape behind the backdrop.
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // Restore focus to the previously active element when the modal closes.
+  useEffect(() => {
+    if (open) return;
+    const prev = previouslyFocusedRef.current;
+    if (prev && typeof prev.focus === "function") prev.focus();
+  }, [open]);
+
   if (!open) return null;
   return (
     <div className="coffee-modal-backdrop" onClick={onClose}>
-      <div className="coffee-modal" role="dialog" aria-modal="true" aria-labelledby="coffee-modal-title" onClick={(e) => e.stopPropagation()}>
+      <div ref={dialogRef} className="coffee-modal" role="dialog" aria-modal="true" aria-labelledby="coffee-modal-title" aria-describedby="coffee-modal-body" onClick={(e) => e.stopPropagation()}>
         <h3 id="coffee-modal-title">{title}</h3>
-        <p>{body}</p>
+        <p id="coffee-modal-body">{body}</p>
         <div className="coffee-modal-actions">
           <button className="coffee-modal-skip" onClick={() => { suppressCoffee(); onClose?.(); }}>No thanks</button>
           <a className="coffee-modal-cta" href={COFFEE_URL} target="_blank" rel="noopener noreferrer" onClick={() => { suppressCoffee(); onClose?.(); }}>Buy me a coffee</a>
