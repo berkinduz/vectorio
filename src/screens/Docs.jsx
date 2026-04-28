@@ -252,7 +252,7 @@ export function Docs({ setView }) {
         <section id="privacy" className="docs-section">
           <h2>Privacy &amp; offline</h2>
           <p>Vectorio is a static client-side app. SVG parsing, cleaning, generation, share-link encoding, zip creation, and downloads happen in the browser. There is no backend upload path for SVG files.</p>
-          <p>The app does not include analytics or telemetry. Theme preference is stored in <code>localStorage</code>. Fonts are requested from Google Fonts during page load and then cached by the browser.</p>
+          <p>Vectorio uses privacy-friendly aggregate page analytics to understand route usage. SVG content is never uploaded, and conversion state is not sent as analytics payload. Theme preference is stored in <code>localStorage</code>. Fonts are requested from Google Fonts during page load and then cached by the browser.</p>
           <p>Once the app is loaded, conversion can continue without a network connection unless the page is refreshed and uncached assets are needed again.</p>
         </section>
 

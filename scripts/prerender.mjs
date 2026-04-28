@@ -12,6 +12,11 @@ const ROUTES = {
   "/convert": {
     title: "Convert SVG to React, Vue, Svelte, Solid component — Vectorio",
     desc: "Paste or drop an SVG. Get a clean, typed component for React, Vue, Svelte, or Solid — with auto-detected props and a live preview. No CLI, no account.",
+    image: "/converter.jpg",
+    imageType: "image/jpeg",
+    imageWidth: "1280",
+    imageHeight: "630",
+    imageAlt: "Vectorio Converter screen with SVG preview and generated component output.",
     h1: "Convert SVG to React, Vue, Svelte, or Solid component",
     body: `
       <p>Vectorio's single-file converter takes any SVG — including messy Figma or Sketch exports — and produces a clean, typed component for React, Vue, Svelte, or Solid. Props like <code>color</code>, <code>size</code>, and <code>stroke</code> are auto-detected from the source markup.</p>
@@ -30,6 +35,11 @@ const ROUTES = {
   "/batch": {
     title: "SVG icon library generator — Vectorio",
     desc: "Drop a folder of SVGs. Vectorio bundles them into a tree-shakable icon library with typed components, package.json, and README. Runs in your browser.",
+    image: "/batch.jpg",
+    imageType: "image/jpeg",
+    imageWidth: "1232",
+    imageHeight: "720",
+    imageAlt: "Vectorio Batch screen generating an icon library from multiple SVG files.",
     h1: "Generate a tree-shakable SVG icon library from a folder",
     body: `
       <p>Vectorio's batch mode turns a folder of SVGs into a production-ready icon library — one typed component per icon, a barrel <code>index</code> export, <code>package.json</code>, and a README. Runs entirely in your browser; nothing is uploaded.</p>
@@ -50,6 +60,11 @@ const ROUTES = {
   "/docs": {
     title: "Documentation — Vectorio",
     desc: "Current Vectorio documentation: converter, batch mode, SVG cleaning behavior, advanced output options, framework output, share links, and privacy.",
+    image: "/og-image.png",
+    imageType: "image/png",
+    imageWidth: "1200",
+    imageHeight: "630",
+    imageAlt: "Vectorio — Paste messy SVG. Ship a clean icon library.",
     h1: "Vectorio documentation — how it works",
     body: `
       <p>Full documentation for Vectorio: how the converter and batch modes work, every option and what it does, what the SVG cleaner removes, how auto-detected props are chosen, advanced output options, share link mechanics, and privacy guarantees.</p>
@@ -63,7 +78,7 @@ const ROUTES = {
         <li>Auto-detected props — color, size, and strokeWidth behavior</li>
         <li>Framework output — React, Vue, Svelte, and Solid output differences</li>
         <li>Share links — gzip+base64url encoding, included settings, URL limits, privacy</li>
-        <li>Privacy — no SVG upload, no analytics, fully client-side processing</li>
+        <li>Privacy — no SVG upload, aggregate page analytics only, fully client-side conversion</li>
       </ul>
     `,
     schemaName: "Vectorio Documentation",
@@ -81,14 +96,22 @@ const base = await fs.readFile(path.join(DIST, "index.html"), "utf8");
 
 for (const [route, meta] of Object.entries(ROUTES)) {
   const canonical = ORIGIN + route;
+  const image = ORIGIN + meta.image;
   let html = base.replace(/<title>[^<]*<\/title>/, `<title>${meta.title}</title>`);
   html = replaceAttr(html, /<meta name="description"[^>]*>/, "content", meta.desc);
   html = replaceAttr(html, /<meta property="og:title"[^>]*>/, "content", meta.title);
   html = replaceAttr(html, /<meta property="og:description"[^>]*>/, "content", meta.desc);
   html = replaceAttr(html, /<meta property="og:url"[^>]*>/, "content", canonical);
+  html = replaceAttr(html, /<meta property="og:image"[^>]*>/, "content", image);
+  html = replaceAttr(html, /<meta property="og:image:type"[^>]*>/, "content", meta.imageType);
+  html = replaceAttr(html, /<meta property="og:image:width"[^>]*>/, "content", meta.imageWidth);
+  html = replaceAttr(html, /<meta property="og:image:height"[^>]*>/, "content", meta.imageHeight);
+  html = replaceAttr(html, /<meta property="og:image:alt"[^>]*>/, "content", meta.imageAlt);
   html = replaceAttr(html, /<meta name="twitter:title"[^>]*>/, "content", meta.title);
   html = replaceAttr(html, /<meta name="twitter:description"[^>]*>/, "content", meta.desc);
   html = replaceAttr(html, /<meta name="twitter:url"[^>]*>/, "content", canonical);
+  html = replaceAttr(html, /<meta name="twitter:image"[^>]*>/, "content", image);
+  html = replaceAttr(html, /<meta name="twitter:image:alt"[^>]*>/, "content", meta.imageAlt);
   html = replaceAttr(html, /<link rel="canonical"[^>]*>/, "href", canonical);
 
   // Append per-route JSON-LD (WebPage + BreadcrumbList) right before </head>
@@ -100,7 +123,7 @@ for (const [route, meta] of Object.entries(ROUTES)) {
     description: meta.schemaDesc,
     isPartOf: { "@id": ORIGIN + "/#website" },
     inLanguage: "en",
-    primaryImageOfPage: { "@id": ORIGIN + "/og-image.png" },
+    primaryImageOfPage: { "@id": image },
     ...(meta.isArticle ? {
       headline: meta.h1,
       author: { "@type": "Person", name: "Berkin Düz" },
